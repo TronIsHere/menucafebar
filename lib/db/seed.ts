@@ -1,0 +1,161 @@
+import mongoose from "mongoose";
+import { MenuTemplate } from "./models/MenuTemplate";
+
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/menucaffe";
+
+const templates = [
+  {
+    // Traditional editorial feel — sharp edges, underline tabs, horizontal list rows
+    name: "کلاسیک",
+    description: "طراحی کلاسیک و شیک با لبه‌های تیز، تایپوگرافی قوی و ردیف‌های خوانا",
+    thumbnail: "/templates/classic.png",
+    primaryColor: "#1a1a1a",
+    accentColor: "#c8a96e",
+    bgColor: "#ffffff",
+    cardBg: "#fafafa",
+    textColor: "#1a1a1a",
+    layoutType: "list",
+    headerStyle: "standard",
+    darkMode: false,
+    borderRadius: "sharp",
+    categoryTabStyle: "underline",
+    templateKey: "classic",
+  },
+  {
+    // Tech/startup minimal feel — rounded chips, grid, compact header
+    name: "مدرن",
+    description: "طراحی مینیمال با چیپ‌های دسته‌بندی، شبکه تمیز و هدر فشرده",
+    thumbnail: "/templates/modern.png",
+    primaryColor: "#1e293b",
+    accentColor: "#f97316",
+    bgColor: "#f1f5f9",
+    cardBg: "#ffffff",
+    textColor: "#0f172a",
+    layoutType: "grid",
+    headerStyle: "minimal",
+    darkMode: false,
+    borderRadius: "rounded",
+    categoryTabStyle: "chip",
+    templateKey: "modern",
+  },
+  {
+    // Playful/bubbly — pill everything, full-card browse, big hero
+    name: "رنگارنگ",
+    description: "طراحی پرانرژی و بازیگوشانه با اشکال گرد، هدر بزرگ و کارت‌های صفحه‌پر",
+    thumbnail: "/templates/colorful.png",
+    primaryColor: "#7c3aed",
+    accentColor: "#f59e0b",
+    bgColor: "#fdf4ff",
+    cardBg: "#ffffff",
+    textColor: "#1a1a2e",
+    layoutType: "card",
+    headerStyle: "hero",
+    darkMode: false,
+    borderRadius: "pill",
+    categoryTabStyle: "pill",
+    templateKey: "colorful",
+  },
+  {
+    // Organic/soft — pill shapes, grid, warm greens
+    name: "طبیعی",
+    description: "طراحی ارگانیک با اشکال نرم، رنگ‌های زمینی و احساس طبیعی و صمیمی",
+    thumbnail: "/templates/natural.png",
+    primaryColor: "#2d6a2f",
+    accentColor: "#d4a853",
+    bgColor: "#f0fdf4",
+    cardBg: "#ffffff",
+    textColor: "#14532d",
+    layoutType: "grid",
+    headerStyle: "standard",
+    darkMode: false,
+    borderRadius: "pill",
+    categoryTabStyle: "pill",
+    templateKey: "natural",
+  },
+  {
+    // Premium dark/neon — rounded, chip tabs, dark card layout
+    name: "شب تاریک",
+    description: "طراحی تاریک و پرمیوم با لهجه‌های نئون، کارت‌های بزرگ و احساس شبانه",
+    thumbnail: "/templates/dark.png",
+    primaryColor: "#0f172a",
+    accentColor: "#38bdf8",
+    bgColor: "#020617",
+    cardBg: "#0f172a",
+    textColor: "#e2e8f0",
+    layoutType: "card",
+    headerStyle: "minimal",
+    darkMode: true,
+    borderRadius: "rounded",
+    categoryTabStyle: "chip",
+    templateKey: "dark",
+  },
+  {
+    // Cozy/warm — rounded, pill tabs, magazine layout, hero header
+    name: "گرم",
+    description: "طراحی گرم و دنج با چیدمان مجله‌ای، هدر بزرگ و رنگ‌های قهوه‌ای دلنشین",
+    thumbnail: "/templates/warm.png",
+    primaryColor: "#92400e",
+    accentColor: "#fbbf24",
+    bgColor: "#fffbeb",
+    cardBg: "#ffffff",
+    textColor: "#451a03",
+    layoutType: "magazine",
+    headerStyle: "hero",
+    darkMode: false,
+    borderRadius: "rounded",
+    categoryTabStyle: "pill",
+    templateKey: "warm",
+  },
+  {
+    // Fresh/coastal — rounded, underline tabs, airy grid
+    name: "اقیانوس",
+    description: "طراحی تازه و آبی با تب‌های زیرخط‌دار، شبکه هوایی و احساس ساحلی",
+    thumbnail: "/templates/ocean.png",
+    primaryColor: "#0e7490",
+    accentColor: "#67e8f9",
+    bgColor: "#ecfeff",
+    cardBg: "#ffffff",
+    textColor: "#083344",
+    layoutType: "grid",
+    headerStyle: "standard",
+    darkMode: false,
+    borderRadius: "rounded",
+    categoryTabStyle: "underline",
+    templateKey: "ocean",
+  },
+  {
+    // Luxury dark — sharp edges, underline tabs, dark magazine, hero header
+    name: "شکلاتی",
+    description: "طراحی لوکس و تاریک با لبه‌های شارپ، چیدمان مجله‌ای و رنگ‌های شکلاتی",
+    thumbnail: "/templates/chocolate.png",
+    primaryColor: "#3b1f0e",
+    accentColor: "#d4a96a",
+    bgColor: "#120904",
+    cardBg: "#1e0f07",
+    textColor: "#f5e6d3",
+    layoutType: "magazine",
+    headerStyle: "hero",
+    darkMode: true,
+    borderRadius: "sharp",
+    categoryTabStyle: "underline",
+    templateKey: "chocolate",
+  },
+];
+
+async function seed() {
+  await mongoose.connect(MONGODB_URI);
+  console.log("Connected to MongoDB");
+
+  await MenuTemplate.deleteMany({});
+  console.log("Cleared existing templates");
+
+  await MenuTemplate.insertMany(templates);
+  console.log(`Seeded ${templates.length} menu templates`);
+
+  await mongoose.disconnect();
+}
+
+seed().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
