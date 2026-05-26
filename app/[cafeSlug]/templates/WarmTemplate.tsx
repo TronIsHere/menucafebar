@@ -121,110 +121,78 @@ export default function WarmTemplate({ cafe, categories, items, template }: Temp
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {/* Featured first item */}
-            <div style={{
-              backgroundColor: cardBg, borderRadius: 16, overflow: "hidden",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-              border: `1px solid ${accentColor}20`,
-            }}>
-              <div style={{ height: 210, position: "relative", backgroundColor: `${primaryColor}15` }}>
+            {catItems.map((item, idx) => (
+              <div key={item._id} style={{
+                backgroundColor: cardBg, borderRadius: idx === 0 ? 16 : 14, overflow: "hidden",
+                boxShadow: idx === 0 ? "0 4px 20px rgba(0,0,0,0.1)" : "0 2px 10px rgba(0,0,0,0.07)",
+                border: `1px solid ${idx === 0 ? `${accentColor}20` : `${textColor}08`}`,
+                display: "flex", alignItems: "center", gap: 16, padding: 16,
+              }}>
                 <MenuItemImage
-                  imageUrl={catItems[0].imageUrl}
-                  alt={catItems[0].name}
-                  style={{ width: "100%", height: "100%" }}
-                  iconSize={56}
-                  iconColor={`${primaryColor}20`}
+                  imageUrl={item.imageUrl}
+                  alt={item.name}
+                  style={{
+                    width: idx === 0 ? 130 : 100,
+                    height: idx === 0 ? 130 : 100,
+                    flexShrink: 0,
+                    borderRadius: 12,
+                    backgroundColor: `${primaryColor}10`,
+                  }}
+                  iconSize={idx === 0 ? 44 : 34}
+                  iconColor={`${primaryColor}25`}
                 />
-                <div style={{
-                  position: "absolute", inset: 0,
-                  background: `linear-gradient(to bottom, transparent 40%, ${cardBg}f0 100%)`,
-                }} />
-                {/* Recommended badge */}
-                <div style={{
-                  position: "absolute", top: 14, right: 14,
-                  backgroundColor: accentColor, borderRadius: 12,
-                  padding: "5px 12px", display: "flex", alignItems: "center", gap: 5,
-                }}>
-                  <Star style={{ width: 11, height: 11, color: primaryColor }} />
-                  <span style={{ fontSize: 11, fontWeight: 800, color: primaryColor }}>پیشنهاد شف</span>
-                </div>
-              </div>
-              <div style={{ padding: "6px 20px 20px" }}>
-                <p style={{ fontSize: 19, fontWeight: 900, margin: "0 0 6px", color: textColor }}>{catItems[0].name}</p>
-                {catItems[0].description && (
-                  <p style={{ fontSize: 13, margin: "0 0 14px", color: muted, lineHeight: 1.7, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                    {catItems[0].description}
-                  </p>
-                )}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <span style={{ fontSize: 17, fontWeight: 900, color: accentColor }}>{fmt(catItems[0].price)}</span>
-                  <QtyControl item={catItems[0]} />
-                </div>
-              </div>
-            </div>
-
-            {/* Rest in 2-column grid */}
-            {catItems.length > 1 && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                {catItems.slice(1).map((item) => (
-                  <div key={item._id} style={{
-                    backgroundColor: cardBg, borderRadius: 14, overflow: "hidden",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
-                    border: `1px solid ${textColor}08`,
-                    display: "flex", flexDirection: "column",
-                  }}>
-                    <MenuItemImage
-                      imageUrl={item.imageUrl}
-                      alt={item.name}
-                      style={{
-                        height: 120,
-                        backgroundColor: `${primaryColor}10`,
-                      }}
-                      iconSize={34}
-                      iconColor={`${primaryColor}25`}
-                    />
-                    <div style={{ padding: "10px 12px 12px", flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
-                      <p style={{ fontSize: 13, fontWeight: 700, margin: 0, color: textColor, lineHeight: 1.3 }}>{item.name}</p>
-                      {item.description && (
-                        <p style={{ fontSize: 11, margin: 0, color: muted, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                          {item.description}
-                        </p>
-                      )}
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: 6 }}>
-                        <span style={{ fontSize: 12, fontWeight: 800, color: accentColor }}>{fmt(item.price)}</span>
-                        {getQty(item._id) === 0 ? (
-                          <button onClick={() => addItem({ menuItemId: item._id, name: item.name, price: item.price })} style={{
-                            width: 28, height: 28, borderRadius: 10, backgroundColor: primaryColor,
-                            color: "#fff", border: "none", cursor: "pointer",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                          }}>
-                            <Plus style={{ width: 13, height: 13 }} />
-                          </button>
-                        ) : (
-                          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                            <button onClick={() => updateQuantity(item._id, getQty(item._id) - 1)} style={{
-                              width: 24, height: 24, borderRadius: 8, backgroundColor: `${primaryColor}18`,
-                              color: primaryColor, border: "none", cursor: "pointer",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                            }}>
-                              <Minus style={{ width: 11, height: 11 }} />
-                            </button>
-                            <span style={{ fontWeight: 700, fontSize: 12, color: textColor, minWidth: 16, textAlign: "center" }}>{getQty(item._id)}</span>
-                            <button onClick={() => addItem({ menuItemId: item._id, name: item.name, price: item.price })} style={{
-                              width: 24, height: 24, borderRadius: 8, backgroundColor: primaryColor,
-                              color: "#fff", border: "none", cursor: "pointer",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                            }}>
-                              <Plus style={{ width: 11, height: 11 }} />
-                            </button>
-                          </div>
-                        )}
-                      </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {idx === 0 && (
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: 5,
+                      backgroundColor: accentColor, borderRadius: 12,
+                      padding: "4px 10px", marginBottom: 8,
+                    }}>
+                      <Star style={{ width: 11, height: 11, color: primaryColor }} />
+                      <span style={{ fontSize: 11, fontWeight: 800, color: primaryColor }}>پیشنهاد شف</span>
                     </div>
+                  )}
+                  <p style={{ fontSize: idx === 0 ? 19 : 13, fontWeight: idx === 0 ? 900 : 700, margin: "0 0 6px", color: textColor, lineHeight: 1.3 }}>{item.name}</p>
+                  {item.description && (
+                    <p style={{ fontSize: idx === 0 ? 13 : 11, margin: "0 0 14px", color: muted, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                      {item.description}
+                    </p>
+                  )}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{ fontSize: idx === 0 ? 17 : 12, fontWeight: 800, color: accentColor }}>{fmt(item.price)}</span>
+                    {idx === 0 ? (
+                      <QtyControl item={item} />
+                    ) : getQty(item._id) === 0 ? (
+                      <button onClick={() => addItem({ menuItemId: item._id, name: item.name, price: item.price })} style={{
+                        width: 28, height: 28, borderRadius: 10, backgroundColor: primaryColor,
+                        color: "#fff", border: "none", cursor: "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <Plus style={{ width: 13, height: 13 }} />
+                      </button>
+                    ) : (
+                      <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                        <button onClick={() => updateQuantity(item._id, getQty(item._id) - 1)} style={{
+                          width: 24, height: 24, borderRadius: 8, backgroundColor: `${primaryColor}18`,
+                          color: primaryColor, border: "none", cursor: "pointer",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                          <Minus style={{ width: 11, height: 11 }} />
+                        </button>
+                        <span style={{ fontWeight: 700, fontSize: 12, color: textColor, minWidth: 16, textAlign: "center" }}>{getQty(item._id)}</span>
+                        <button onClick={() => addItem({ menuItemId: item._id, name: item.name, price: item.price })} style={{
+                          width: 24, height: 24, borderRadius: 8, backgroundColor: primaryColor,
+                          color: "#fff", border: "none", cursor: "pointer",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                          <Plus style={{ width: 11, height: 11 }} />
+                        </button>
+                      </div>
+                    )}
                   </div>
-                ))}
+                </div>
               </div>
-            )}
+            ))}
           </div>
         )}
       </main>

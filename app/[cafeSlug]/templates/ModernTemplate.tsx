@@ -120,34 +120,36 @@ export default function ModernTemplate({ cafe, categories, items, template }: Te
             <p style={{ margin: 0, fontSize: 14 }}>{search ? "نتیجه‌ای یافت نشد" : "آیتمی موجود نیست"}</p>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {catItems.map((item) => {
               const qty = getQty(item._id);
               return (
                 <div key={item._id} style={{
                   backgroundColor: cardBg, borderRadius: 12,
                   boxShadow: "0 2px 8px rgba(0,0,0,0.07)", overflow: "hidden",
-                  display: "flex", flexDirection: "column",
+                  display: "flex", alignItems: "center", gap: 14, padding: 12,
                 }}>
                   <MenuItemImage
                     imageUrl={item.imageUrl}
                     alt={item.name}
                     style={{
-                      height: 120,
+                      width: 100,
+                      height: 100,
+                      flexShrink: 0,
+                      borderRadius: 8,
                       backgroundColor: `${primaryColor}14`,
                     }}
                     iconSize={36}
                     iconColor={`${primaryColor}30`}
                   />
-                  {/* Info */}
-                  <div style={{ padding: "10px 12px 12px", flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                  <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                     <p style={{ fontSize: 13, fontWeight: 700, margin: 0, color: textColor, lineHeight: 1.4 }}>{item.name}</p>
                     {item.description && (
                       <p style={{ fontSize: 11, margin: 0, color: muted, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                         {item.description}
                       </p>
                     )}
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: 8 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
                       <span style={{ fontSize: 12, fontWeight: 800, color: accentColor }}>{fmt(item.price)}</span>
                       {qty === 0 ? (
                         <button onClick={() => addItem({ menuItemId: item._id, name: item.name, price: item.price })} style={{

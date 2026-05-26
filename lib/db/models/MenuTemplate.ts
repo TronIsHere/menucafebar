@@ -10,7 +10,7 @@ export interface IMenuTemplate extends Document {
   bgColor: string;
   cardBg: string;
   textColor: string;
-  layoutType: "grid" | "list" | "card" | "magazine";
+  layoutType: "grid" | "list" | "card" | "magazine" | "sidebar" | "accordion" | "bento" | "retro" | "tiles";
   headerStyle: "standard" | "minimal" | "hero";
   darkMode: boolean;
   borderRadius: "sharp" | "rounded" | "pill";
@@ -29,7 +29,7 @@ const MenuTemplateSchema = new Schema<IMenuTemplate>({
   textColor: { type: String, default: "#111827" },
   layoutType: {
     type: String,
-    enum: ["grid", "list", "card", "magazine"],
+    enum: ["grid", "list", "card", "magazine", "sidebar", "accordion", "bento", "retro", "tiles"],
     required: true,
   },
   headerStyle: {

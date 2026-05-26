@@ -100,32 +100,23 @@ export default function DarkTemplate({ cafe, categories, items, template }: Temp
                   overflow: "hidden",
                   boxShadow: `0 0 0 1px ${accentColor}08, 0 4px 20px rgba(0,0,0,0.4)`,
                   transition: "border-color 0.2s",
+                  display: "flex", alignItems: "center", gap: 16, padding: 16,
                 }}>
-                  <div style={{
-                    height: 180, position: "relative",
-                    borderBottom: `1px solid ${accentColor}15`,
-                  }}>
-                    <MenuItemImage
-                      imageUrl={item.imageUrl}
-                      alt={item.name}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: `${accentColor}08`,
-                      }}
-                      iconSize={48}
-                      iconColor={`${accentColor}20`}
-                    />
-                    {/* Corner glow */}
-                    <div style={{
-                      position: "absolute", top: 0, right: 0, width: 80, height: 80,
-                      background: `radial-gradient(circle at top right, ${accentColor}15, transparent 70%)`,
-                      pointerEvents: "none",
-                    }} />
-                  </div>
+                  <MenuItemImage
+                    imageUrl={item.imageUrl}
+                    alt={item.name}
+                    style={{
+                      width: 110,
+                      height: 110,
+                      flexShrink: 0,
+                      borderRadius: 8,
+                      backgroundColor: `${accentColor}08`,
+                    }}
+                    iconSize={36}
+                    iconColor={`${accentColor}20`}
+                  />
 
-                  {/* Content */}
-                  <div style={{ padding: "16px 20px 20px" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontSize: 16, fontWeight: 700, margin: "0 0 6px", color: textColor }}>{item.name}</p>
                     {item.description && (
                       <p style={{ fontSize: 12, margin: "0 0 14px", color: muted, lineHeight: 1.6 }}>
@@ -133,7 +124,6 @@ export default function DarkTemplate({ cafe, categories, items, template }: Temp
                       </p>
                     )}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      {/* Large neon price */}
                       <span style={{
                         fontSize: 18, fontWeight: 900, color: accentColor,
                         textShadow: `0 0 12px ${accentColor}60`,

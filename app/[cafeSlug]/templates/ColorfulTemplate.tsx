@@ -127,21 +127,22 @@ export default function ColorfulTemplate({ cafe, categories, items, template }: 
                   overflow: "hidden",
                   boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
                   border: `1px solid ${textColor}08`,
+                  display: "flex", alignItems: "center", gap: 16, padding: 16,
                 }}>
-                  {/* Large image area */}
                   <MenuItemImage
                     imageUrl={item.imageUrl}
                     alt={item.name}
                     style={{
-                      height: 180,
-                      position: "relative",
+                      width: 110,
+                      height: 110,
+                      flexShrink: 0,
+                      borderRadius: 12,
                       background: `linear-gradient(135deg, ${primaryColor}18, ${accentColor}18)`,
                     }}
-                    iconSize={52}
+                    iconSize={40}
                     iconColor={`${primaryColor}25`}
                   />
-                  {/* Content */}
-                  <div style={{ padding: "16px 20px 20px" }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontSize: 17, fontWeight: 800, margin: "0 0 6px", color: textColor }}>{item.name}</p>
                     {item.description && (
                       <p style={{ fontSize: 13, margin: "0 0 14px", color: muted, lineHeight: 1.6 }}>

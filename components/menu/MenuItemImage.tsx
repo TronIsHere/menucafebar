@@ -6,6 +6,7 @@ type MenuItemImageProps = {
   style?: React.CSSProperties;
   iconSize?: number;
   iconColor?: string;
+  objectFit?: "contain" | "cover";
 };
 
 export default function MenuItemImage({
@@ -14,6 +15,7 @@ export default function MenuItemImage({
   style,
   iconSize = 30,
   iconColor = "rgba(0,0,0,0.2)",
+  objectFit = "contain",
 }: MenuItemImageProps) {
   const containerStyle: React.CSSProperties = {
     overflow: "hidden",
@@ -33,7 +35,7 @@ export default function MenuItemImage({
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            objectFit,
             display: "block",
           }}
         />

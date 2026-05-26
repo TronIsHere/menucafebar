@@ -2,14 +2,19 @@
 
 import type { TemplateProps } from "./templates/types";
 import { useInitTableFromUrl } from "@/hooks/useInitTableFromUrl";
-import ClassicTemplate   from "./templates/ClassicTemplate";
-import ModernTemplate    from "./templates/ModernTemplate";
-import ColorfulTemplate  from "./templates/ColorfulTemplate";
-import NaturalTemplate   from "./templates/NaturalTemplate";
-import DarkTemplate      from "./templates/DarkTemplate";
-import WarmTemplate      from "./templates/WarmTemplate";
-import OceanTemplate     from "./templates/OceanTemplate";
-import ChocolateTemplate from "./templates/ChocolateTemplate";
+import ClassicTemplate    from "./templates/ClassicTemplate";
+import ModernTemplate     from "./templates/ModernTemplate";
+import ColorfulTemplate   from "./templates/ColorfulTemplate";
+import NaturalTemplate    from "./templates/NaturalTemplate";
+import DarkTemplate       from "./templates/DarkTemplate";
+import WarmTemplate       from "./templates/WarmTemplate";
+import OceanTemplate      from "./templates/OceanTemplate";
+import ChocolateTemplate  from "./templates/ChocolateTemplate";
+import SidebarTemplate    from "./templates/SidebarTemplate";
+import AccordionTemplate  from "./templates/AccordionTemplate";
+import BentoTemplate      from "./templates/BentoTemplate";
+import RetroTemplate      from "./templates/RetroTemplate";
+import TilesTemplate      from "./templates/TilesTemplate";
 
 const TEMPLATE_MAP: Record<string, React.ComponentType<TemplateProps>> = {
   classic:   ClassicTemplate,
@@ -20,6 +25,11 @@ const TEMPLATE_MAP: Record<string, React.ComponentType<TemplateProps>> = {
   warm:      WarmTemplate,
   ocean:     OceanTemplate,
   chocolate: ChocolateTemplate,
+  sidebar:   SidebarTemplate,
+  accordion: AccordionTemplate,
+  bento:     BentoTemplate,
+  retro:     RetroTemplate,
+  tiles:     TilesTemplate,
 };
 
 interface RawTemplate {

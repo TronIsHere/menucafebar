@@ -54,7 +54,7 @@ interface Template {
   bgColor?: string;
   cardBg?: string;
   textColor?: string;
-  layoutType: "grid" | "list" | "card" | "magazine";
+  layoutType: "grid" | "list" | "card" | "magazine" | "sidebar" | "accordion" | "bento" | "retro" | "tiles";
   headerStyle?: "standard" | "minimal" | "hero";
   darkMode?: boolean;
   borderRadius?: "sharp" | "rounded" | "pill";
@@ -365,7 +365,12 @@ export default function MenuBuilder({
               const layoutLabel =
                 tpl.layoutType === "grid" ? "شبکه‌ای" :
                 tpl.layoutType === "list" ? "لیستی" :
-                tpl.layoutType === "magazine" ? "مجله‌ای" : "کارتی";
+                tpl.layoutType === "magazine" ? "مجله‌ای" :
+                tpl.layoutType === "sidebar" ? "سایدبار" :
+                tpl.layoutType === "accordion" ? "آکاردئون" :
+                tpl.layoutType === "bento" ? "بنتو" :
+                tpl.layoutType === "retro" ? "رترو" :
+                tpl.layoutType === "tiles" ? "کاشی" : "کارتی";
               const tabLabel =
                 tabs === "underline" ? "تب خطی" : tabs === "chip" ? "چیپ" : "قرص";
               const radiusLabel =
@@ -497,6 +502,95 @@ export default function MenuBuilder({
                               </div>
                             ))}
                           </div>
+                        </div>
+                      )}
+
+                      {tpl.layoutType === "sidebar" && (
+                        <div style={{ display: "flex", gap: 4, height: 90 }}>
+                          <div style={{ width: 28, backgroundColor: tpl.primaryColor, borderRadius: cardR, display: "flex", flexDirection: "column", gap: 3, padding: "4px 3px" }}>
+                            {[1, 2, 3].map((i) => (
+                              <div key={i} style={{ height: 14, borderRadius: 3, backgroundColor: i === 1 ? `${tpl.accentColor}55` : "rgba(255,255,255,0.12)" }} />
+                            ))}
+                          </div>
+                          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                            {[1, 2].map((i) => (
+                              <div key={i} style={{ display: "flex", gap: 4, height: 26, borderRadius: cardR, backgroundColor: card, padding: "3px 4px", alignItems: "center" }}>
+                                <div style={{ width: 18, height: 18, borderRadius: 3, backgroundColor: imgBg, flexShrink: 0 }} />
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ height: 4, width: "70%", borderRadius: 2, backgroundColor: `${text}55`, marginBottom: 2 }} />
+                                  <div style={{ height: 3, width: "40%", borderRadius: 2, backgroundColor: tpl.accentColor }} />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {tpl.layoutType === "accordion" && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                          <div style={{ borderRadius: cardR, overflow: "hidden", border: `1px solid ${tpl.primaryColor}` }}>
+                            <div style={{ backgroundColor: tpl.primaryColor, padding: "4px 7px", display: "flex", justifyContent: "space-between" }}>
+                              <div style={{ height: 4, width: 40, borderRadius: 2, backgroundColor: "rgba(255,255,255,0.7)" }} />
+                              <div style={{ width: 6, height: 6, borderRadius: 1, backgroundColor: "rgba(255,255,255,0.4)" }} />
+                            </div>
+                            <div style={{ backgroundColor: card, padding: "3px 5px" }}>
+                              {[1, 2].map((i) => (
+                                <div key={i} style={{ display: "flex", gap: 4, padding: "3px 0", borderTop: i > 1 ? `1px solid ${text}10` : "none" }}>
+                                  <div style={{ width: 14, height: 14, borderRadius: 2, backgroundColor: imgBg, flexShrink: 0 }} />
+                                  <div style={{ flex: 1, height: 3, borderRadius: 2, backgroundColor: `${text}44`, marginTop: 4 }} />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div style={{ borderRadius: cardR, padding: "4px 7px", backgroundColor: card, border: `1px solid ${text}12` }}>
+                            <div style={{ height: 4, width: 36, borderRadius: 2, backgroundColor: `${text}44` }} />
+                          </div>
+                        </div>
+                      )}
+
+                      {tpl.layoutType === "bento" && (
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
+                          <div style={{ gridColumn: "span 2", borderRadius: cardR, overflow: "hidden", backgroundColor: card, display: "flex", height: 32 }}>
+                            <div style={{ width: 32, backgroundColor: imgBg, flexShrink: 0 }} />
+                            <div style={{ padding: "4px 6px", flex: 1 }}>
+                              <div style={{ height: 4, width: "60%", borderRadius: 2, backgroundColor: `${text}55`, marginBottom: 3 }} />
+                              <div style={{ height: 3, width: "35%", borderRadius: 2, backgroundColor: tpl.accentColor }} />
+                            </div>
+                          </div>
+                          {[1, 2].map((i) => (
+                            <div key={i} style={{ borderRadius: cardR, overflow: "hidden", backgroundColor: card }}>
+                              <div style={{ height: 22, backgroundColor: imgBg }} />
+                              <div style={{ padding: "3px 4px" }}>
+                                <div style={{ height: 3, width: "75%", borderRadius: 2, backgroundColor: `${text}44` }} />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {tpl.layoutType === "retro" && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6, padding: "2px 0" }}>
+                          {[1, 2, 3].map((i) => (
+                            <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 3 }}>
+                              <div style={{ height: 4, width: 28, borderRadius: 1, backgroundColor: `${text}66`, flexShrink: 0 }} />
+                              <div style={{ flex: 1, borderBottom: `1px dotted ${tpl.accentColor}88`, marginBottom: 2 }} />
+                              <div style={{ height: 4, width: 18, borderRadius: 1, backgroundColor: tpl.accentColor, flexShrink: 0 }} />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {tpl.layoutType === "tiles" && (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                          {[1, 2].map((i) => (
+                            <div key={i} style={{ borderRadius: cardR, overflow: "hidden", height: 38, position: "relative", backgroundColor: imgBg }}>
+                              <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, ${tpl.primaryColor}cc, transparent)` }} />
+                              <div style={{ position: "absolute", bottom: 4, right: 6, left: 6, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                                <div style={{ height: 4, width: 40, borderRadius: 2, backgroundColor: "rgba(255,255,255,0.8)" }} />
+                                <div style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: tpl.accentColor }} />
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>

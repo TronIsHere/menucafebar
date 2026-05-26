@@ -107,8 +107,8 @@ export default function ChocolateTemplate({ cafe, categories, items, template }:
                   imageUrl={item.imageUrl}
                   alt={item.name}
                   style={{
-                    width: 80,
-                    height: 80,
+                    width: 110,
+                    height: 110,
                     flexShrink: 0,
                     border: `1px solid ${accentColor}25`,
                     backgroundColor: `${accentColor}06`,

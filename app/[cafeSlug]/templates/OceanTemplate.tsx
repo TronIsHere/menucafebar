@@ -131,7 +131,7 @@ export default function OceanTemplate({ cafe, categories, items, template }: Tem
               {catItems.length === 0 ? (
                 <p style={{ color: muted, fontSize: 13, paddingBottom: 8 }}>آیتمی موجود نیست</p>
               ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, paddingBottom: 8 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingBottom: 8 }}>
                   {catItems.map((item) => {
                     const qty = getQty(item._id);
                     return (
@@ -139,27 +139,29 @@ export default function OceanTemplate({ cafe, categories, items, template }: Tem
                         backgroundColor: cardBg, borderRadius: 14, overflow: "hidden",
                         border: `1px solid ${primaryColor}12`,
                         boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
-                        display: "flex", flexDirection: "column",
+                        display: "flex", alignItems: "center", gap: 14, padding: 12,
                       }}>
                         <MenuItemImage
                           imageUrl={item.imageUrl}
                           alt={item.name}
                           style={{
-                            height: 120,
+                            width: 100,
+                            height: 100,
+                            flexShrink: 0,
+                            borderRadius: 8,
                             backgroundColor: `${primaryColor}10`,
                           }}
                           iconSize={34}
                           iconColor={`${primaryColor}28`}
                         />
-                        {/* Info */}
-                        <div style={{ padding: "10px 12px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
+                        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                           <p style={{ fontSize: 13, fontWeight: 700, margin: 0, color: textColor, lineHeight: 1.4 }}>{item.name}</p>
                           {item.description && (
                             <p style={{ fontSize: 11, margin: 0, color: muted, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                               {item.description}
                             </p>
                           )}
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: 8 }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
                             <span style={{ fontSize: 12, fontWeight: 800, color: accentColor }}>{fmt(item.price)}</span>
                             {qty === 0 ? (
                               <button onClick={() => addItem({ menuItemId: item._id, name: item.name, price: item.price })} style={{

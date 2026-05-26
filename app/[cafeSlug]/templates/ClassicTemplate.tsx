@@ -91,8 +91,8 @@ export default function ClassicTemplate({ cafe, categories, items, template }: T
                   imageUrl={item.imageUrl}
                   alt={item.name}
                   style={{
-                    width: 88,
-                    height: 88,
+                    width: 110,
+                    height: 110,
                     flexShrink: 0,
                     borderRadius: 4,
                     backgroundColor: `${primaryColor}12`,
