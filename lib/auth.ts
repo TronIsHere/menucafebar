@@ -11,12 +11,12 @@ const db = client.db();
 const isProduction = process.env.NODE_ENV === "production";
 const masterOtp = process.env.MASTER_OTP;
 
-function createDevVerifyOtp(allowedAttempts = 3) {
+function createMasterOtpVerify(allowedAttempts = 3) {
   return async (
     { phoneNumber: phone, code }: { phoneNumber: string; code: string },
     ctx?: GenericEndpointContext
   ) => {
-    if (!isProduction && masterOtp && code === masterOtp) {
+    if (masterOtp && code === masterOtp) {
       return true;
     }
 
@@ -67,9 +67,7 @@ export const auth = betterAuth({
       expiresIn: 120,
       otpLength: 6,
       allowedAttempts: 3,
-      ...(!isProduction && masterOtp
-        ? { verifyOTP: createDevVerifyOtp(3) }
-        : {}),
+      ...(masterOtp ? { verifyOTP: createMasterOtpVerify(3) } : {}),
     }),
   ],
   user: {

@@ -65,10 +65,8 @@ export function parseVerificationToken(token: string): VerificationTokenPayload 
 export async function sendOtp(cafeId: string, phone: string): Promise<void> {
   await connectDB();
 
-  const isProduction = process.env.NODE_ENV === "production";
   const masterOtp = process.env.MASTER_OTP;
-  const code =
-    !isProduction && masterOtp ? masterOtp : generateOtpCode();
+  const code = masterOtp ? masterOtp : generateOtpCode();
 
   const identifier = verificationIdentifier(cafeId, phone);
   const expiresAt = new Date(Date.now() + OTP_EXPIRES_SECONDS * 1000);
@@ -79,7 +77,7 @@ export async function sendOtp(cafeId: string, phone: string): Promise<void> {
     { upsert: true, new: true }
   );
 
-  if (isProduction || !masterOtp) {
+  if (!masterOtp) {
     await sendCustomerOtp(phone, code);
   }
 }
@@ -91,9 +89,8 @@ export async function verifyOtp(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   await connectDB();
 
-  const isProduction = process.env.NODE_ENV === "production";
   const masterOtp = process.env.MASTER_OTP;
-  if (!isProduction && masterOtp && code === masterOtp) {
+  if (masterOtp && code === masterOtp) {
     return { ok: true };
   }
 

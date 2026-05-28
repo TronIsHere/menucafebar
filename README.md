@@ -40,6 +40,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 # Kavenegar — ارسال SMS OTP (Verify Lookup)
 KAVENEGAR_API_KEY=
 KAVENEGAR_VERIFY_TEMPLATE=verify
+# Temporary — remove before production launch (see TODO below)
+MASTER_OTP=000000
 ```
 
 ### ۲. Seed قالب‌های منو
@@ -73,3 +75,7 @@ npm run dev
 ## SMS در محیط توسعه
 
 در محیط توسعه، اگر `KAVENEGAR_API_KEY` یا `KAVENEGAR_VERIFY_TEMPLATE` خالی باشد، کد OTP در `console.log` چاپ می‌شود.
+
+## TODO
+
+- [ ] **حذف `MASTER_OTP` قبل از انتشار نهایی** — فعلاً با `MASTER_OTP=000000` در production هم می‌توان بدون SMS وارد شد؛ این متغیر را از env و deploy حذف کنید و منطق bypass را از `lib/auth.ts` و `lib/customer-club/verification.ts` بردارید.
