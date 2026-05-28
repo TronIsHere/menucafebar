@@ -1,3 +1,5 @@
+import { APP_NAME } from "@/lib/brand";
+
 export interface KitchenTicketItem {
   name: string;
   quantity: number;
@@ -157,7 +159,7 @@ export function buildKitchenTicketHtml(
   ${orderNoteHtml}
 
   <div class="divider-bold"></div>
-  <div class="footer">MenuCafe</div>
+  <div class="footer">${APP_NAME}</div>
 </body>
 </html>`;
 }

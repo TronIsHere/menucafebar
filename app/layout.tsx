@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
 import { PWARegister } from "@/components/providers/PWARegister";
+import { APP_LOGO, APP_NAME, APP_TITLE } from "@/lib/brand";
 import "./globals.css";
 
 const iranSans = localFont({
@@ -33,21 +34,17 @@ const iranSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "MenuCafe | سیستم مدیریت کافه",
+  title: APP_TITLE,
   description: "سیستم یکپارچه مدیریت منو، سفارشات و CRM کافه",
-  applicationName: "MenuCafe",
+  applicationName: APP_NAME,
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "MenuCafe",
+    title: APP_NAME,
   },
   icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    icon: [{ url: APP_LOGO, type: "image/png" }],
+    apple: [{ url: APP_LOGO }],
   },
   formatDetection: {
     telephone: false,

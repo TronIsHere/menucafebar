@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { APP_LOGO, APP_NAME, APP_TITLE } from "@/lib/brand";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "MenuCafe | سیستم مدیریت کافه",
-    short_name: "MenuCafe",
+    name: APP_TITLE,
+    short_name: APP_NAME,
     description: "سیستم یکپارچه مدیریت منو، سفارشات و CRM کافه",
     start_url: "/",
     scope: "/",
@@ -16,22 +17,10 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["business", "food"],
     icons: [
       {
-        src: "/icons/icon-192.png",
-        sizes: "192x192",
+        src: APP_LOGO,
+        sizes: "any",
         type: "image/png",
         purpose: "any",
-      },
-      {
-        src: "/icons/icon-512.png",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "any",
-      },
-      {
-        src: "/icons/icon-maskable-512.png",
-        sizes: "512x512",
-        type: "image/png",
-        purpose: "maskable",
       },
     ],
     shortcuts: [
@@ -39,13 +28,13 @@ export default function manifest(): MetadataRoute.Manifest {
         name: "داشبورد",
         short_name: "داشبورد",
         url: "/dashboard",
-        icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
+        icons: [{ src: APP_LOGO, sizes: "any" }],
       },
       {
         name: "حالت پیشخدمت",
         short_name: "پیشخدمت",
         url: "/waiter",
-        icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
+        icons: [{ src: APP_LOGO, sizes: "any" }],
       },
     ],
   };

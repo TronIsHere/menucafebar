@@ -1,7 +1,7 @@
 const CACHE_NAME = "menucaffe-v2";
 const OFFLINE_URL = "/offline";
 
-const PRECACHE_URLS = [OFFLINE_URL, "/icons/icon-192.png", "/icons/icon-512.png"];
+const PRECACHE_URLS = [OFFLINE_URL, "/logo.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

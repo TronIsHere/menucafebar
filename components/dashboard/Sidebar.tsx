@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { APP_NAME } from "@/lib/brand";
+import { AppLogo } from "@/components/brand/AppLogo";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -22,7 +24,6 @@ import {
   Package,
   Settings,
   LogOut,
-  Coffee,
   UserCheck,
   Menu,
   LayoutGrid,
@@ -66,11 +67,9 @@ function SidebarContent({
   return (
     <>
       <div className="flex items-center gap-3 p-6 border-b border-border">
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary text-primary-foreground">
-          <Coffee className="w-5 h-5" />
-        </div>
+        <AppLogo size="sm" />
         <div className="min-w-0">
-          <p className="font-bold text-sm truncate">{cafeName || "MenuCafe"}</p>
+          <p className="font-bold text-sm truncate">{cafeName || APP_NAME}</p>
           <p className="text-xs text-muted-foreground">پنل مدیریت</p>
         </div>
       </div>
@@ -147,10 +146,8 @@ export function MobileDashboardHeader({ cafeName }: { cafeName?: string }) {
         </SheetContent>
       </Sheet>
       <div className="flex items-center gap-2 min-w-0 flex-1">
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground shrink-0">
-          <Coffee className="w-4 h-4" />
-        </div>
-        <p className="font-bold text-sm truncate">{cafeName || "MenuCafe"}</p>
+        <AppLogo size="xs" />
+        <p className="font-bold text-sm truncate">{cafeName || APP_NAME}</p>
       </div>
     </header>
   );

@@ -6,14 +6,21 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Coffee } from "lucide-react";
+import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
+import { AppLogo } from "@/components/brand/AppLogo";
 
 type Step = "phone" | "otp";
 
@@ -93,11 +100,9 @@ function LoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary text-primary-foreground mb-4">
-            <Coffee className="w-8 h-8" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">MenuCafe</h1>
-          <p className="text-muted-foreground text-sm mt-1">سیستم مدیریت کافه</p>
+          <AppLogo size="lg" className="mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-foreground">{APP_NAME}</h1>
+          <p className="text-muted-foreground text-sm mt-1">{APP_TAGLINE}</p>
         </div>
 
         <Card>
@@ -106,9 +111,17 @@ function LoginForm() {
               {step === "phone" ? "ورود / ثبت‌نام" : "تایید شماره موبایل"}
             </CardTitle>
             <CardDescription>
-              {step === "phone"
-                ? "شماره موبایل خود را وارد کنید"
-                : `کد ارسال شده به ${phone} را وارد کنید`}
+              {step === "phone" ? (
+                "شماره موبایل خود را وارد کنید"
+              ) : (
+                <>
+                  کد ارسال شده به{" "}
+                  <span dir="ltr" className="inline-block">
+                    {phone}
+                  </span>{" "}
+                  را وارد کنید
+                </>
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-4">

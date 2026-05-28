@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Coffee,
   BarChart3,
   Users,
   Package,
@@ -32,6 +31,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
+import { AppLogo } from "@/components/brand/AppLogo";
 
 const navLinks = [
   { label: "امکانات", href: "#features" },
@@ -106,7 +107,7 @@ const testimonials = [
   {
     name: "علی محمدی",
     cafe: "کافه آوا، تهران",
-    text: "از زمانی که MenuCafe رو استفاده می‌کنم، مدیریت سفارشات خیلی راحت‌تر شده. درآمدم ۳۰٪ بیشتر شده و اشتباهات سفارش به صفر رسیده.",
+    text: `از زمانی که ${APP_NAME} رو استفاده می‌کنم، مدیریت سفارشات خیلی راحت‌تر شده. درآمدم ۳۰٪ بیشتر شده و اشتباهات سفارش به صفر رسیده.`,
     avatar: "ع",
     avatarBg: "bg-orange-100 text-orange-700",
   },
@@ -120,7 +121,7 @@ const testimonials = [
   {
     name: "رضا تهرانی",
     cafe: "کافه تهران، مشهد",
-    text: "گزارش‌های تحلیلی MenuCafe کمک کرد بفهمم کدوم آیتم‌ها سودآورترن. موجودی انبارم هم الان تحت کنترله.",
+    text: `گزارش‌های تحلیلی ${APP_NAME} کمک کرد بفهمم کدوم آیتم‌ها سودآورترن. موجودی انبارم هم الان تحت کنترله.`,
     avatar: "ر",
     avatarBg: "bg-green-100 text-green-700",
   },
@@ -198,7 +199,7 @@ const whyItems = [
   {
     icon: TrendingUp,
     title: "رشد درآمد",
-    desc: "کافه‌هایی که از MenuCafe استفاده می‌کنند به طور میانگین ۲۵٪ افزایش درآمد دارند.",
+    desc: `کافه‌هایی که از ${APP_NAME} استفاده می‌کنند به طور میانگین ۲۵٪ افزایش درآمد دارند.`,
     color: "text-green-500",
     bg: "bg-green-50",
   },
@@ -243,19 +244,15 @@ const sidebarItems = [
 const chartBars = [40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88];
 
 function Logo({ size = "md" }: { size?: "sm" | "md" }) {
-  const iconSize = size === "sm" ? "w-8 h-8" : "w-10 h-10";
-  const coffeeSize = size === "sm" ? "w-4 h-4" : "w-5 h-5";
   const textSize = size === "sm" ? "text-base" : "text-lg";
 
   return (
     <div className="flex items-center gap-3">
-      <div className={cn("rounded-xl bg-primary text-primary-foreground flex items-center justify-center shrink-0", iconSize)}>
-        <Coffee className={coffeeSize} />
-      </div>
+      <AppLogo size={size === "sm" ? "xs" : "sm"} />
       <div>
-        <p className={cn("font-bold leading-none", textSize)}>MenuCafe</p>
+        <p className={cn("font-bold leading-none", textSize)}>{APP_NAME}</p>
         {size === "md" && (
-          <p className="text-xs text-muted-foreground mt-0.5">سیستم مدیریت کافه</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{APP_TAGLINE}</p>
         )}
       </div>
     </div>
@@ -401,9 +398,7 @@ export default function LandingPage() {
                 <div className="hidden sm:flex flex-col w-48 bg-card border-e border-border shrink-0">
                   <div className="p-4 border-b border-border">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
-                        <Coffee className="w-4 h-4" />
-                      </div>
+                      <AppLogo size="xs" />
                       <div className="min-w-0">
                         <p className="text-xs font-bold truncate">کافه آوا</p>
                         <p className="text-[10px] text-muted-foreground">پنل مدیریت</p>
@@ -536,7 +531,7 @@ export default function LandingPage() {
               همه چیزی که نیاز داری، در یک جا
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              از روز اول تا بزرگ‌ترین روز کافه‌ات، MenuCafe همراه توست.
+              از روز اول تا بزرگ‌ترین روز کافه‌ات، {APP_NAME} همراه توست.
             </p>
           </div>
 
@@ -556,11 +551,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Why MenuCafe */}
+      {/* Why us */}
       <section className="py-20 px-4 sm:px-6 bg-background border-y border-border">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">چرا MenuCafe؟</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">چرا {APP_NAME}؟</h2>
             <p className="text-muted-foreground">مزایایی که کافه‌ات را یک قدم جلوتر می‌برد</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -716,7 +711,7 @@ export default function LandingPage() {
               <div className="relative">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">کافه‌ات را متحول کن</h2>
                 <p className="text-primary-foreground/70 mb-8 max-w-md mx-auto leading-relaxed">
-                  بیش از ۵۰۰ کافه در ایران به MenuCafe اعتماد کردند. نوبت توست.
+                  بیش از ۵۰۰ کافه در ایران به {APP_NAME} اعتماد کردند. نوبت توست.
                 </p>
                 <Button size="lg" variant="secondary" className="gap-2" asChild>
                   <Link href="/login">
@@ -765,7 +760,7 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p className="text-xs text-muted-foreground">© ۱۴۰۴ MenuCafe. تمام حقوق محفوظ است.</p>
+            <p className="text-xs text-muted-foreground">© ۱۴۰۴ {APP_NAME}. تمام حقوق محفوظ است.</p>
             <div className="flex gap-5">
               {["حریم خصوصی", "شرایط استفاده", "سیاست کوکی"].map((item) => (
                 <a key={item} href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
