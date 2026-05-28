@@ -37,9 +37,9 @@ MONGODB_URI=mongodb://localhost:27017/menucaffe
 BETTER_AUTH_SECRET=your-secret-min-32-chars
 BETTER_AUTH_URL=http://localhost:3000
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-# برای ارسال SMS واقعی (مثلاً Kavenegar)
-SMS_API_KEY=
-SMS_SENDER=
+# Kavenegar — ارسال SMS OTP (Verify Lookup)
+KAVENEGAR_API_KEY=
+KAVENEGAR_VERIFY_TEMPLATE=verify
 ```
 
 ### ۲. Seed قالب‌های منو
@@ -72,4 +72,4 @@ npm run dev
 
 ## SMS در محیط توسعه
 
-در محیط توسعه، اگر `SMS_API_KEY` خالی باشد، کد OTP در `console.log` چاپ می‌شود.
+در محیط توسعه، اگر `KAVENEGAR_API_KEY` یا `KAVENEGAR_VERIFY_TEMPLATE` خالی باشد، کد OTP در `console.log` چاپ می‌شود.

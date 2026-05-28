@@ -1,9 +1,16 @@
-export async function sendCustomerOtp(phone: string, code: string): Promise<void> {
-  console.log(`[Customer Club OTP] Send ${code} to ${phone}`);
+import { isKavenegarConfigured, sendOtpSms } from "@/lib/kavenegar";
 
-  const smsApiKey = process.env.SMS_API_KEY;
-  if (!smsApiKey) return;
+const isProduction = process.env.NODE_ENV === "production";
 
-  // Kavenegar example — swap with your SMS provider
-  // await fetch(`https://api.kavenegar.com/v1/${smsApiKey}/verify/lookup.json?receptor=${phone}&token=${code}&template=verify`)
+export async function sendCustomerOtp(
+  phone: string,
+  code: string
+): Promise<void> {
+  if (!isProduction || !isKavenegarConfigured()) {
+    console.log(`[Customer Club OTP] Send ${code} to ${phone}`);
+  }
+
+  if (!isKavenegarConfigured()) return;
+
+  await sendOtpSms(phone, code);
 }

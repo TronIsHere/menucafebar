@@ -3,6 +3,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { phoneNumber } from "better-auth/plugins";
 import type { GenericEndpointContext } from "@better-auth/core";
 import { MongoClient } from "mongodb";
+import { isKavenegarConfigured, sendOtpSms } from "@/lib/kavenegar";
 
 const client = new MongoClient(process.env.MONGODB_URI!);
 const db = client.db();
@@ -50,15 +51,13 @@ export const auth = betterAuth({
   plugins: [
     phoneNumber({
       sendOTP: async ({ phoneNumber: phone, code }) => {
-        // In production, replace with a real SMS provider (e.g. Kavenegar)
-        // For development, log the OTP to the console
-        console.log(`[SMS OTP] Send ${code} to ${phone}`);
+        if (!isProduction || !isKavenegarConfigured()) {
+          console.log(`[SMS OTP] Send ${code} to ${phone}`);
+        }
 
-        const smsApiKey = process.env.SMS_API_KEY;
-        if (!smsApiKey) return;
+        if (!isKavenegarConfigured()) return;
 
-        // Kavenegar example — swap with your SMS provider
-        // await fetch(`https://api.kavenegar.com/v1/${smsApiKey}/verify/lookup.json?receptor=${phone}&token=${code}&template=verify`)
+        await sendOtpSms(phone, code);
       },
       signUpOnVerification: {
         getTempEmail: (phone) => `${phone.replace(/\D/g, "")}@menucaffe.ir`,
