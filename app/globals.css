@@ -95,3 +95,182 @@ html[dir="rtl"] input:not([dir="ltr"]),
 html[dir="rtl"] textarea:not([dir="ltr"]) {
   text-align: right;
 }
+
+/* ============================================================
+   Landing page animations (warm coffee identity + motion)
+   Transform/opacity only for 60fps; respects reduced-motion.
+   ============================================================ */
+
+@keyframes lp-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lp-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(2deg); }
+}
+
+@keyframes lp-drift {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(14px, -22px) rotate(8deg); }
+  66% { transform: translate(-10px, 14px) rotate(-6deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes lp-aurora {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(4%, 6%, 0) scale(1.15); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes lp-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes lp-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes lp-shine {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  60%, 100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+@keyframes lp-grow-bar {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes lp-pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes lp-steam {
+  0% { transform: translateY(0) scaleX(1); opacity: 0; }
+  15% { opacity: 0.5; }
+  50% { opacity: 0.35; }
+  100% { transform: translateY(-22px) scaleX(1.6); opacity: 0; }
+}
+
+@keyframes lp-spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+/* Scroll reveal — toggled by IntersectionObserver via .is-visible */
+.lp-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.lp-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Animated brand gradient text (coffee tones) */
+.lp-gradient-text {
+  background-image: linear-gradient(
+    100deg,
+    hsl(28 90% 48%),
+    hsl(15 85% 55%),
+    hsl(340 75% 55%),
+    hsl(28 90% 48%)
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: lp-gradient 6s ease-in-out infinite;
+}
+
+.lp-float { animation: lp-float 7s ease-in-out infinite; }
+.lp-drift { animation: lp-drift 16s ease-in-out infinite; }
+.lp-spin-slow { animation: lp-spin-slow 26s linear infinite; }
+
+.lp-aurora-blob {
+  animation: lp-aurora 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+.lp-marquee-track {
+  animation: lp-marquee 32s linear infinite;
+}
+.lp-marquee:hover .lp-marquee-track {
+  animation-play-state: paused;
+}
+
+.lp-bar {
+  transform-origin: bottom;
+  animation: lp-grow-bar 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.lp-shine-wrap { position: relative; overflow: hidden; }
+.lp-shine-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(0 0% 100% / 0.35),
+    transparent
+  );
+  transform: translateX(-150%) skewX(-20deg);
+  animation: lp-shine 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.lp-pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: lp-pulse-ring 2.2s ease-out infinite;
+}
+
+.lp-steam {
+  animation: lp-steam 2.8s ease-in-out infinite;
+}
+
+/* Card hover lift used across landing */
+.lp-lift {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease;
+}
+.lp-lift:hover {
+  transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-reveal,
+  .lp-gradient-text,
+  .lp-float,
+  .lp-drift,
+  .lp-spin-slow,
+  .lp-aurora-blob,
+  .lp-marquee-track,
+  .lp-bar,
+  .lp-shine-wrap::after,
+  .lp-pulse-ring::before,
+  .lp-steam {
+    animation: none !important;
+    transition: none !important;
+  }
+  .lp-reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .lp-lift:hover {
+    transform: none;
+  }
+}

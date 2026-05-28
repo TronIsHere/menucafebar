@@ -24,7 +24,8 @@ const schema = z.object({
   newCustomerDiscountPercent: z.number().min(0).max(100),
 });
 
-type FormData = z.infer<typeof schema>;
+type FormInput = z.input<typeof schema>;
+type FormData = z.output<typeof schema>;
 
 interface Props {
   cafe: {
@@ -47,7 +48,7 @@ export default function SettingsForm({ cafe }: Props) {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
+  } = useForm<FormInput, unknown, FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: cafe.name,

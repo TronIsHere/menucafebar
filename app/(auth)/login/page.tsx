@@ -82,7 +82,7 @@ function LoginForm() {
         code: otp,
       });
       if (error) {
-        toast.error(error.message || "کد تایید اشتباه است");
+        toast.error("کد اشتباه است");
         setOtp("");
         return;
       }
