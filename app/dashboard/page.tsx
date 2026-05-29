@@ -1,161 +1,213 @@
 import { getSession, getCafeForOwner } from "@/lib/session";
 import { connectDB } from "@/lib/db/mongoose";
 import { Order } from "@/lib/db/models/Order";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, Clock, CheckCircle, TrendingUp } from "@/lib/icons/app-icons";
-import Link from "next/link";
+import { calcTrend, formatNum, formatToman } from "@/components/dashboard/format";
+import DashboardHome, {
+  type DashboardOrder,
+  type DashboardStat,
+  type DashboardStatIcon,
+  type WeekPoint,
+} from "./DashboardHome";
 
-function formatToman(amount: number) {
-  return new Intl.NumberFormat("fa-IR").format(amount) + " تومان";
+function getTehranGreeting(): string {
+  const hour = parseInt(
+    new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      hour12: false,
+      timeZone: "Asia/Tehran",
+    }).format(new Date()),
+    10
+  );
+  if (hour < 12) return "صبح بخیر";
+  if (hour < 17) return "عصر بخیر";
+  return "شب بخیر";
+}
+
+function buildWeekSeries(
+  raw: { _id: string; revenue: number; count: number }[]
+): WeekPoint[] {
+  const map = new Map(raw.map((r) => [r._id, r]));
+  const points: WeekPoint[] = [];
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    points.push({
+      label: `${month}/${day}`,
+      revenue: map.get(key)?.revenue ?? 0,
+      count: map.get(key)?.count ?? 0,
+    });
+  }
+
+  return points;
 }
 
 export default async function DashboardPage() {
   const session = await getSession();
   const cafe = await getCafeForOwner(session!.user.id);
+  const cafeId = cafe!._id.toString();
 
   await connectDB();
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [totalOrders, pendingOrders, todayOrders, recentOrders] =
-    await Promise.all([
-      Order.countDocuments({ cafeId: cafe!._id.toString() }),
-      Order.countDocuments({
-        cafeId: cafe!._id.toString(),
-        status: { $in: ["pending", "preparing"] },
-      }),
-      Order.find({
-        cafeId: cafe!._id.toString(),
-        createdAt: { $gte: today },
-        status: { $ne: "cancelled" },
-      }),
-      Order.find({ cafeId: cafe!._id.toString() })
-        .sort({ createdAt: -1 })
-        .limit(5)
-        .lean(),
-    ]);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+
+  const activeStatuses = ["pending", "preparing", "ready"] as const;
+
+  const [
+    totalOrders,
+    pendingOrders,
+    readyOrders,
+    unpaidActive,
+    todayOrders,
+    yesterdayOrders,
+    recentOrdersRaw,
+    weekRevenueRaw,
+  ] = await Promise.all([
+    Order.countDocuments({ cafeId }),
+    Order.countDocuments({
+      cafeId,
+      status: { $in: ["pending", "preparing"] },
+    }),
+    Order.countDocuments({ cafeId, status: "ready" }),
+    Order.countDocuments({
+      cafeId,
+      status: { $in: activeStatuses },
+      isPaid: false,
+    }),
+    Order.find({
+      cafeId,
+      createdAt: { $gte: today },
+      status: { $ne: "cancelled" },
+    }).lean(),
+    Order.find({
+      cafeId,
+      createdAt: { $gte: yesterday, $lt: today },
+      status: { $ne: "cancelled" },
+    }).lean(),
+    Order.find({ cafeId })
+      .sort({ createdAt: -1 })
+      .limit(6)
+      .lean(),
+    Order.aggregate([
+      {
+        $match: {
+          cafeId,
+          status: { $in: ["completed", "ready"] },
+          createdAt: { $gte: sevenDaysAgo },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+          revenue: { $sum: "$total" },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]),
+  ]);
 
   const todayRevenue = todayOrders.reduce((sum, o) => sum + o.total, 0);
+  const yesterdayRevenue = yesterdayOrders.reduce((sum, o) => sum + o.total, 0);
+  const avgOrderToday =
+    todayOrders.length > 0 ? Math.round(todayRevenue / todayOrders.length) : 0;
+
+  const revenueTrend = calcTrend(todayRevenue, yesterdayRevenue);
+  const ordersTrend = calcTrend(todayOrders.length, yesterdayOrders.length);
 
   const stats = [
     {
+      id: "pending",
       title: "سفارشات در حال انجام",
-      value: pendingOrders,
-      icon: Clock,
+      value: formatNum(pendingOrders),
+      icon: "clock" satisfies DashboardStatIcon,
       color: "text-orange-500",
-      bg: "bg-orange-50",
+      border: "border-orange-200 dark:border-orange-900",
       href: "/dashboard/orders",
+      highlight: pendingOrders > 0,
+      trend: null,
     },
     {
+      id: "today-orders",
       title: "سفارشات امروز",
-      value: todayOrders.length,
-      icon: ShoppingBag,
+      value: formatNum(todayOrders.length),
+      icon: "shopping-bag" satisfies DashboardStatIcon,
       color: "text-blue-500",
-      bg: "bg-blue-50",
+      border: "border-blue-200 dark:border-blue-900",
       href: "/dashboard/orders",
+      trend: ordersTrend,
     },
     {
+      id: "today-revenue",
       title: "درآمد امروز",
       value: formatToman(todayRevenue),
-      icon: TrendingUp,
+      icon: "trending-up" satisfies DashboardStatIcon,
       color: "text-green-500",
-      bg: "bg-green-50",
+      border: "border-emerald-200 dark:border-emerald-900",
       href: "/dashboard/analytics",
+      trend: revenueTrend,
     },
     {
+      id: "total",
       title: "کل سفارشات",
-      value: totalOrders,
-      icon: CheckCircle,
+      value: formatNum(totalOrders),
+      icon: "check-circle" satisfies DashboardStatIcon,
       color: "text-purple-500",
-      bg: "bg-purple-50",
+      border: "border-violet-200 dark:border-violet-900",
       href: "/dashboard/analytics",
+      trend: null,
     },
-  ];
+  ] satisfies DashboardStat[];
 
-  const statusMap: Record<string, { label: string; variant: "default" | "secondary" | "destructive" | "outline" }> = {
-    pending: { label: "جدید", variant: "default" },
-    preparing: { label: "در حال آماده‌سازی", variant: "secondary" },
-    ready: { label: "آماده", variant: "outline" },
-    completed: { label: "تکمیل شده", variant: "outline" },
-    cancelled: { label: "لغو شده", variant: "destructive" },
-  };
+  const recentOrders: DashboardOrder[] = recentOrdersRaw.map((order) => ({
+    _id: order._id.toString(),
+    items: order.items.map((i: { name: string; quantity: number }) => ({
+      name: i.name,
+      quantity: i.quantity,
+    })),
+    total: order.total,
+    status: order.status,
+    source: order.source,
+    isPaid: order.isPaid,
+    tableNumber: order.tableNumber,
+    createdAt: order.createdAt.toISOString(),
+  }));
+
+  const weekRevenue = buildWeekSeries(weekRevenueRaw);
+
+  const todayLabel = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date());
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold">خوش آمدید 👋</h1>
-        <p className="text-muted-foreground text-sm sm:text-base">خلاصه وضعیت کافه {cafe?.name}</p>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <Link key={stat.title} href={stat.href}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs sm:text-sm text-muted-foreground">{stat.title}</p>
-                    <p className="text-lg sm:text-2xl font-bold mt-1 truncate">{stat.value}</p>
-                  </div>
-                  <div className={`${stat.bg} p-2.5 sm:p-3 rounded-xl shrink-0`}>
-                    <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
-      </div>
-
-      {/* Recent Orders */}
-      <Card>
-        <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle className="text-lg">آخرین سفارشات</CardTitle>
-          <Link
-            href="/dashboard/orders"
-            className="text-sm text-primary hover:underline"
-          >
-            مشاهده همه
-          </Link>
-        </CardHeader>
-        <CardContent>
-          {recentOrders.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8">
-              هنوز سفارشی ثبت نشده است
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {recentOrders.map((order) => (
-                <div
-                  key={order._id.toString()}
-                  className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-3 rounded-lg bg-muted/30"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                      {order.tableNumber || "#"}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">
-                        {order.items.length} آیتم
-                        {order.tableNumber && ` (میز ${order.tableNumber})`}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatToman(order.total)}
-                      </p>
-                    </div>
-                  </div>
-                  <Badge variant={statusMap[order.status]?.variant ?? "outline"} className="self-start sm:self-auto">
-                    {statusMap[order.status]?.label ?? order.status}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    <DashboardHome
+      cafeName={cafe?.name ?? ""}
+      greeting={getTehranGreeting()}
+      todayLabel={todayLabel}
+      stats={stats}
+      recentOrders={recentOrders}
+      weekRevenue={weekRevenue}
+      alerts={{
+        pendingCount: pendingOrders,
+        readyCount: readyOrders,
+        unpaidCount: unpaidActive,
+      }}
+      avgOrderToday={avgOrderToday}
+    />
   );
 }

@@ -355,27 +355,24 @@ export default function MenuBuilder({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-1 sm:block">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold">مدیریت منو</h1>
-          <p className="text-muted-foreground text-sm mt-1 break-all">
-            آدرس منوی شما:{" "}
-            <a
-              href={`/${cafeSlug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline inline-flex items-center gap-1"
-              dir="ltr"
-            >
-              {getMenuPublicUrl(cafeSlug).replace(/^https?:\/\//, "")}{" "}
-              <ExternalLink className="inline w-3 h-3 shrink-0" />
-            </a>
-          </p>
-        </div>
+      <div className="rounded-xl border bg-muted/30 px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <p className="text-sm text-muted-foreground">
+          آدرس منوی عمومی
+        </p>
+        <a
+          href={`/${cafeSlug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-primary hover:underline inline-flex items-center gap-1.5 cursor-pointer font-mono"
+          dir="ltr"
+        >
+          {getMenuPublicUrl(cafeSlug).replace(/^https?:\/\//, "")}
+          <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+        </a>
       </div>
 
       <Tabs defaultValue="menu">
-        <TabsList className="w-full h-auto flex-wrap sm:flex-nowrap justify-start gap-1">
+        <TabsList className="grid w-full sm:w-auto sm:inline-grid grid-cols-3 h-auto p-1 bg-muted rounded-xl">
           <TabsTrigger value="menu" className="flex-1 sm:flex-none">منو و آیتم‌ها</TabsTrigger>
           <TabsTrigger value="templates" className="flex-1 sm:flex-none">انتخاب قالب</TabsTrigger>
           <TabsTrigger value="qr" className="flex-1 sm:flex-none gap-1.5">

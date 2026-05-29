@@ -1,6 +1,7 @@
 import { getSession, getCafeForOwner } from "@/lib/session";
 import { connectDB } from "@/lib/db/mongoose";
 import { Order } from "@/lib/db/models/Order";
+import { DashboardPage, DashboardPageHeader } from "@/components/dashboard/shell";
 import AnalyticsDashboard from "./AnalyticsDashboard";
 
 export default async function AnalyticsPage() {
@@ -134,13 +135,11 @@ export default async function AnalyticsPage() {
   ]);
 
   return (
-    <div className="p-4 sm:p-6">
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">آمار و گزارش</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">
-          بررسی عملکرد کافه شما
-        </p>
-      </div>
+    <DashboardPage>
+      <DashboardPageHeader
+        title="آمار و گزارش"
+        description="بررسی عملکرد فروش، پرفروش‌ها و ساعات اوج مراجعه"
+      />
       <AnalyticsDashboard
         dailyRevenue={JSON.parse(JSON.stringify(dailyRevenue))}
         topItems={JSON.parse(JSON.stringify(topItems))}
@@ -154,6 +153,6 @@ export default async function AnalyticsPage() {
         thisWeekOrders={thisWeekAgg[0]?.count ?? 0}
         lastWeekOrders={lastWeekAgg[0]?.count ?? 0}
       />
-    </div>
+    </DashboardPage>
   );
 }

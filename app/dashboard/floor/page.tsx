@@ -1,6 +1,7 @@
 import { getSession, getCafeForOwner } from "@/lib/session";
 import { connectDB } from "@/lib/db/mongoose";
 import { Order } from "@/lib/db/models/Order";
+import { DashboardPage, DashboardPageHeader } from "@/components/dashboard/shell";
 import FloorPlanView from "@/components/tables/FloorPlanView";
 
 export default async function FloorPage() {
@@ -26,22 +27,17 @@ export default async function FloorPage() {
       .lean(),
   ]);
 
-  const initialOrders = JSON.parse(JSON.stringify(activeOrders));
-  const initialUnpaidOrders = JSON.parse(JSON.stringify(unpaidOrders));
-
   return (
-    <div className="p-4 sm:p-6">
-      <div className="mb-4 sm:mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold">نقشه سالن</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          وضعیت لحظه‌ای میزها — خالی، در حال سفارش، آماده تحویل، در انتظار پرداخت
-        </p>
-      </div>
+    <DashboardPage>
+      <DashboardPageHeader
+        title="نقشه سالن"
+        description="وضعیت لحظه‌ای میزها — خالی، در حال سفارش، آماده تحویل، در انتظار پرداخت"
+      />
       <FloorPlanView
-        initialOrders={initialOrders}
-        initialUnpaidOrders={initialUnpaidOrders}
+        initialOrders={JSON.parse(JSON.stringify(activeOrders))}
+        initialUnpaidOrders={JSON.parse(JSON.stringify(unpaidOrders))}
         tableNumbers={cafe!.tableNumbers ?? []}
       />
-    </div>
+    </DashboardPage>
   );
 }

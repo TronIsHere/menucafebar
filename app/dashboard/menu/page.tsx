@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db/mongoose";
 import { Category } from "@/lib/db/models/Category";
 import { MenuItem } from "@/lib/db/models/MenuItem";
 import { MENU_TEMPLATES, resolveCafeTemplateKey } from "@/lib/menu-templates";
+import { DashboardPage, DashboardPageHeader } from "@/components/dashboard/shell";
 import MenuBuilder from "./MenuBuilder";
 
 export default async function MenuPage() {
@@ -20,7 +21,11 @@ export default async function MenuPage() {
     .lean();
 
   return (
-    <div className="p-4 sm:p-6">
+    <DashboardPage size="full">
+      <DashboardPageHeader
+        title="مدیریت منو"
+        description="دسته‌بندی‌ها، آیتم‌ها، قالب نمایش و QR منو"
+      />
       <MenuBuilder
         cafeId={cafe!._id.toString()}
         cafeSlug={cafe!.slug}
@@ -31,6 +36,6 @@ export default async function MenuPage() {
         initialItems={JSON.parse(JSON.stringify(items))}
         templates={MENU_TEMPLATES}
       />
-    </div>
+    </DashboardPage>
   );
 }

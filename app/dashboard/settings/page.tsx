@@ -1,4 +1,5 @@
 import { getSession, getCafeForOwner } from "@/lib/session";
+import { DashboardPage, DashboardPageHeader } from "@/components/dashboard/shell";
 import SettingsForm from "./SettingsForm";
 
 export default async function SettingsPage() {
@@ -6,9 +7,12 @@ export default async function SettingsPage() {
   const cafe = await getCafeForOwner(session!.user.id);
 
   return (
-    <div className="p-4 sm:p-6 max-w-2xl mx-auto">
-      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">تنظیمات کافه</h1>
+    <DashboardPage size="narrow">
+      <DashboardPageHeader
+        title="تنظیمات کافه"
+        description="اطلاعات عمومی، ساعات کاری، میزها و باشگاه مشتریان"
+      />
       <SettingsForm cafe={JSON.parse(JSON.stringify(cafe))} />
-    </div>
+    </DashboardPage>
   );
 }

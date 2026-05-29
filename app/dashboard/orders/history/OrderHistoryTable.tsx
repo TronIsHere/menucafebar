@@ -28,17 +28,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DashboardStatCard, DashboardEmptyState } from "@/components/dashboard/primitives";
+import { formatNum, formatToman } from "@/components/dashboard/format";
 import {
   formatJalaliDate,
   formatJalaliDateTime,
   formatJalaliTime,
   toJalaliInputValue,
 } from "@/lib/dates/jalali";
-import {
-  type Order,
-  formatToman,
-  statusLabels,
-} from "@/lib/orders/lifecycle";
+import { type Order, statusLabels } from "@/lib/orders/lifecycle";
 import {
   ChevronLeft,
   ChevronRight,
@@ -161,69 +159,43 @@ export default function OrderHistoryTable({
     <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <ShoppingBag className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">کل سفارشات</p>
-              <p className="text-lg font-bold">
-                {new Intl.NumberFormat("fa-IR").format(stats.orderCount)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-green-100">
-              <Banknote className="w-5 h-5 text-green-700" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">مجموع فروش</p>
-              <p className="text-sm font-bold">{formatToman(stats.totalRevenue)}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-100">
-              <CheckCircle2 className="w-5 h-5 text-blue-700" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">تحویل شده</p>
-              <p className="text-lg font-bold">
-                {new Intl.NumberFormat("fa-IR").format(stats.completedCount)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-red-100">
-              <XCircle className="w-5 h-5 text-red-700" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">لغو شده</p>
-              <p className="text-lg font-bold">
-                {new Intl.NumberFormat("fa-IR").format(stats.cancelledCount)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="col-span-2 lg:col-span-1">
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-amber-100">
-              <Receipt className="w-5 h-5 text-amber-700" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">پرداخت نشده</p>
-              <p className="text-lg font-bold">
-                {new Intl.NumberFormat("fa-IR").format(stats.unpaidCount)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <DashboardStatCard
+          title="کل سفارشات"
+          value={formatNum(stats.orderCount)}
+          icon={ShoppingBag}
+          color="text-primary"
+          border="border-primary/30"
+        />
+        <DashboardStatCard
+          title="مجموع فروش"
+          value={formatToman(stats.totalRevenue)}
+          icon={Banknote}
+          color="text-green-600"
+          border="border-green-200 dark:border-green-900"
+        />
+        <DashboardStatCard
+          title="تحویل شده"
+          value={formatNum(stats.completedCount)}
+          icon={CheckCircle2}
+          color="text-blue-600"
+          border="border-blue-200 dark:border-blue-900"
+        />
+        <DashboardStatCard
+          title="لغو شده"
+          value={formatNum(stats.cancelledCount)}
+          icon={XCircle}
+          color="text-red-600"
+          border="border-red-200 dark:border-red-900"
+        />
+        <div className="col-span-2 lg:col-span-1">
+          <DashboardStatCard
+            title="پرداخت نشده"
+            value={formatNum(stats.unpaidCount)}
+            icon={Receipt}
+            color="text-amber-700"
+            border="border-amber-200 dark:border-amber-900"
+          />
+        </div>
       </div>
 
       {/* Filters */}
@@ -381,9 +353,11 @@ export default function OrderHistoryTable({
         </CardHeader>
         <CardContent>
           {orders.length === 0 ? (
-            <p className="text-muted-foreground text-center py-12">
-              سفارشی با این فیلترها یافت نشد
-            </p>
+            <DashboardEmptyState
+              icon={Search}
+              title="سفارشی با این فیلترها یافت نشد"
+              description="فیلترها را تغییر دهید یا بازه زمانی دیگری انتخاب کنید"
+            />
           ) : (
             <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
               <Table className="min-w-[900px]">

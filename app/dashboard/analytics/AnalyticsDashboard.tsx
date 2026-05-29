@@ -15,14 +15,28 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
+  DashboardStatCard,
+  IconChip,
+  TrendBadge,
+} from "@/components/dashboard/primitives";
+import {
+  CHART_ACCENT,
+  chartGridStroke,
+  chartTickMuted,
+  chartTooltipStyle,
+} from "@/components/dashboard/chart-theme";
+import {
+  calcTrend,
+  formatNum,
+  formatTomanFull,
+} from "@/components/dashboard/format";
+import {
   TrendingUp,
-  TrendingDown,
   ShoppingBag,
   CheckCircle,
   Wallet,
   Flame,
   Clock,
-  Minus,
 } from "@/lib/icons/app-icons";
 import { cn } from "@/lib/utils";
 
@@ -57,18 +71,10 @@ interface Props {
   lastWeekOrders: number;
 }
 
-function formatToman(n: number) {
+function formatTomanAxis(n: number) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)} م`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(0)} ه`;
   return n.toString();
-}
-
-function formatTomanFull(n: number) {
-  return new Intl.NumberFormat("fa-IR").format(n) + " تومان";
-}
-
-function formatNum(n: number) {
-  return new Intl.NumberFormat("fa-IR").format(n);
 }
 
 function formatDate(dateStr: string) {
@@ -76,85 +82,9 @@ function formatDate(dateStr: string) {
   return `${date.getMonth() + 1}/${date.getDate()}`;
 }
 
-function calcTrend(current: number, previous: number) {
-  if (previous === 0) return current > 0 ? 100 : 0;
-  return Math.round(((current - previous) / previous) * 100);
-}
-
 const HOUR_LABELS: Record<number, string> = Object.fromEntries(
   Array.from({ length: 24 }, (_, h) => [h, formatNum(h)])
 );
-
-// Shared chart accent + theme-aware tooltip styling
-const ACCENT = "#6366f1";
-
-const tooltipStyle = {
-  borderRadius: 12,
-  border: "1px solid hsl(var(--border))",
-  background: "hsl(var(--popover))",
-  color: "hsl(var(--popover-foreground))",
-  fontSize: 12,
-  boxShadow: "0 8px 24px -8px rgb(0 0 0 / 0.18)",
-} as const;
-
-// SVG presentation attributes can't read CSS vars — use neutral colors
-// that read well in both light and dark mode.
-const gridStroke = "rgba(148, 163, 184, 0.22)";
-const tickMuted = "#94a3b8";
-
-function TrendBadge({ trend }: { trend: number }) {
-  if (trend === 0) {
-    return (
-      <span className="inline-flex items-center gap-0.5 rounded-full border border-border px-1.5 py-0.5 text-xs text-muted-foreground">
-        <Minus className="w-3 h-3" />
-        بدون تغییر
-      </span>
-    );
-  }
-  const isUp = trend > 0;
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-xs font-medium",
-        isUp
-          ? "border-emerald-300 text-emerald-600 dark:border-emerald-800"
-          : "border-red-300 text-red-500 dark:border-red-900"
-      )}
-    >
-      {isUp ? (
-        <TrendingUp className="w-3 h-3" />
-      ) : (
-        <TrendingDown className="w-3 h-3" />
-      )}
-      {formatNum(Math.abs(trend))}٪
-    </span>
-  );
-}
-
-// Border-only icon chip — no fill background.
-function IconChip({
-  icon: Icon,
-  color,
-  border,
-  className,
-}: {
-  icon: typeof TrendingUp;
-  color: string;
-  border: string;
-  className?: string;
-}) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center justify-center rounded-xl border bg-transparent",
-        border,
-        className
-      )}
-    >
-      <Icon className={cn("w-4 h-4", color)} />
-    </span>
-  );
-}
 
 export default function AnalyticsDashboard({
   dailyRevenue,
@@ -192,8 +122,8 @@ export default function AnalyticsDashboard({
   const avgOrderValue =
     completedOrders > 0 ? Math.round(totalRevenue / completedOrders) : 0;
 
-  const revenueTrend = calcTrend(thisWeekRevenue, lastWeekRevenue);
-  const ordersTrend = calcTrend(thisWeekOrders, lastWeekOrders);
+  const revenueTrend = calcTrend(thisWeekRevenue, lastWeekRevenue) ?? 0;
+  const ordersTrend = calcTrend(thisWeekOrders, lastWeekOrders) ?? 0;
 
   const maxPeak = Math.max(...peakData.map((d) => d.count), 1);
   const peakHourEntry = peakData.reduce(
@@ -237,29 +167,14 @@ export default function AnalyticsDashboard({
       {/* KPI Stats */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
         {stats.map((stat) => (
-          <Card
+          <DashboardStatCard
             key={stat.title}
-            className="overflow-hidden transition-colors hover:border-foreground/20"
-          >
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-muted-foreground leading-tight">
-                    {stat.title}
-                  </p>
-                  <p className="text-base sm:text-lg font-bold mt-2 leading-tight truncate">
-                    {stat.value}
-                  </p>
-                </div>
-                <IconChip
-                  icon={stat.icon}
-                  color={stat.color}
-                  border={stat.border}
-                  className="w-9 h-9 shrink-0"
-                />
-              </div>
-            </CardContent>
-          </Card>
+            title={stat.title}
+            value={stat.value}
+            icon={stat.icon}
+            color={stat.color}
+            border={stat.border}
+          />
         ))}
       </div>
 
@@ -337,42 +252,42 @@ export default function AnalyticsDashboard({
               <AreaChart data={chartData} margin={{ right: 4, left: 4, top: 4 }}>
                 <defs>
                   <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={ACCENT} stopOpacity={0.28} />
-                    <stop offset="95%" stopColor={ACCENT} stopOpacity={0} />
+                    <stop offset="5%" stopColor={CHART_ACCENT} stopOpacity={0.28} />
+                    <stop offset="95%" stopColor={CHART_ACCENT} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
-                  stroke={gridStroke}
+                  stroke={chartGridStroke}
                 />
                 <XAxis
                   dataKey="date"
-                  tick={{ fontSize: 10, fill: tickMuted }}
+                  tick={{ fontSize: 10, fill: chartTickMuted }}
                   tickLine={false}
                   axisLine={false}
                   interval="preserveStartEnd"
                 />
                 <YAxis
-                  tickFormatter={formatToman}
-                  tick={{ fontSize: 10, fill: tickMuted }}
+                  tickFormatter={formatTomanAxis}
+                  tick={{ fontSize: 10, fill: chartTickMuted }}
                   tickLine={false}
                   axisLine={false}
                   width={36}
                 />
                 <Tooltip
-                  cursor={{ stroke: gridStroke }}
+                  cursor={{ stroke: chartGridStroke }}
                   formatter={(value: unknown) => [
                     formatTomanFull(value as number),
                     "درآمد",
                   ]}
                   labelFormatter={(label) => `تاریخ: ${label}`}
-                  contentStyle={tooltipStyle}
+                  contentStyle={chartTooltipStyle}
                 />
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke={ACCENT}
+                  stroke={CHART_ACCENT}
                   strokeWidth={2.5}
                   fill="url(#revenueGrad)"
                   dot={false}
@@ -445,17 +360,17 @@ export default function AnalyticsDashboard({
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
-                  stroke={gridStroke}
+                  stroke={chartGridStroke}
                 />
                 <XAxis
                   dataKey="label"
-                  tick={{ fontSize: 10, fill: tickMuted }}
+                  tick={{ fontSize: 10, fill: chartTickMuted }}
                   tickLine={false}
                   axisLine={false}
                   interval={2}
                 />
                 <YAxis
-                  tick={{ fontSize: 10, fill: tickMuted }}
+                  tick={{ fontSize: 10, fill: chartTickMuted }}
                   tickLine={false}
                   axisLine={false}
                   width={24}
@@ -468,7 +383,7 @@ export default function AnalyticsDashboard({
                     "تعداد",
                   ]}
                   labelFormatter={(label) => `ساعت ${label}`}
-                  contentStyle={tooltipStyle}
+                  contentStyle={chartTooltipStyle}
                 />
                 <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                   {peakData.map((entry) => {

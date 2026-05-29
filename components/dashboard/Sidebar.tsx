@@ -30,16 +30,41 @@ import {
   History,
 } from "@/lib/icons/app-icons";
 
-const navItems = [
-  { href: "/dashboard", label: "داشبورد", icon: LayoutDashboard, exact: true },
-  { href: "/dashboard/orders", label: "سفارشات", icon: ShoppingBag, exact: true },
-  { href: "/dashboard/orders/history", label: "تاریخچه سفارشات", icon: History },
-  { href: "/dashboard/floor", label: "نقشه سالن", icon: LayoutGrid },
-  { href: "/dashboard/menu", label: "منو", icon: UtensilsCrossed },
-  { href: "/dashboard/qr", label: "QR منو", icon: QrCode },
-  { href: "/dashboard/analytics", label: "آمار و گزارش", icon: BarChart3 },
-  { href: "/dashboard/crm", label: "CRM و انبار", icon: Package },
-  { href: "/dashboard/settings", label: "تنظیمات", icon: Settings },
+type NavItem = {
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+const navGroups: { label: string; items: NavItem[] }[] = [
+  {
+    label: "عملیات",
+    items: [
+      { href: "/dashboard", label: "داشبورد", icon: LayoutDashboard, exact: true },
+      { href: "/dashboard/orders", label: "سفارشات زنده", icon: ShoppingBag, exact: true },
+      { href: "/dashboard/orders/history", label: "تاریخچه", icon: History },
+      { href: "/dashboard/floor", label: "نقشه سالن", icon: LayoutGrid },
+    ],
+  },
+  {
+    label: "منو",
+    items: [
+      { href: "/dashboard/menu", label: "مدیریت منو", icon: UtensilsCrossed },
+      { href: "/dashboard/qr", label: "QR منو", icon: QrCode },
+    ],
+  },
+  {
+    label: "کسب‌وکار",
+    items: [
+      { href: "/dashboard/analytics", label: "آمار و گزارش", icon: BarChart3 },
+      { href: "/dashboard/crm", label: "CRM و انبار", icon: Package },
+    ],
+  },
+  {
+    label: "سیستم",
+    items: [{ href: "/dashboard/settings", label: "تنظیمات", icon: Settings }],
+  },
 ];
 
 const quickLinks = [
@@ -64,42 +89,57 @@ function SidebarContent({
     router.refresh();
   }
 
+  function isActive(item: NavItem) {
+    if (item.exact) return pathname === item.href;
+    return pathname.startsWith(item.href);
+  }
+
   return (
     <>
-      <div className="flex items-center gap-3 p-6 border-b border-border">
+      <div className="flex items-center gap-3 p-5 border-b border-border">
         <AppLogo size="sm" />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="font-bold text-sm truncate">{cafeName || APP_NAME}</p>
           <p className="text-xs text-muted-foreground">پنل مدیریت</p>
         </div>
       </div>
 
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = item.exact
-            ? pathname === item.href
-            : pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <item.icon className="w-4 h-4 shrink-0" />
-              {item.label}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 p-3 space-y-4 overflow-y-auto">
+        {navGroups.map((group) => (
+          <div key={group.label}>
+            <p className="text-[10px] font-semibold text-muted-foreground/70 px-3 mb-1.5 uppercase tracking-wider">
+              {group.label}
+            </p>
+            <div className="space-y-0.5">
+              {group.items.map((item) => {
+                const active = isActive(item);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    className={cn(
+                      "relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer",
+                      active
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    {active && (
+                      <span className="absolute inset-y-2 start-0 w-0.5 rounded-full bg-primary" />
+                    )}
+                    <item.icon className="w-4 h-4 shrink-0" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       <div className="px-3 pb-2">
-        <p className="text-xs text-muted-foreground px-3 mb-1 uppercase tracking-wide">
+        <p className="text-[10px] font-semibold text-muted-foreground/70 px-3 mb-1.5 uppercase tracking-wider">
           دسترسی سریع
         </p>
         {quickLinks.map((link) => (
@@ -107,7 +147,7 @@ function SidebarContent({
             key={link.href}
             href={link.href}
             onClick={onNavigate}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
           >
             <link.icon className="w-4 h-4 shrink-0" />
             {link.label}
@@ -118,7 +158,7 @@ function SidebarContent({
       <div className="p-3 border-t border-border">
         <Button
           variant="ghost"
-          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground cursor-pointer"
           onClick={handleSignOut}
         >
           <LogOut className="w-4 h-4" />
@@ -133,10 +173,10 @@ export function MobileDashboardHeader({ cafeName }: { cafeName?: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="lg:hidden sticky top-0 z-40 flex items-center gap-3 px-4 py-3 bg-card border-b border-border shrink-0">
+    <header className="lg:hidden sticky top-0 z-40 flex items-center gap-3 px-4 py-3 bg-card/95 backdrop-blur-md border-b border-border shrink-0">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="باز کردن منو">
+          <Button variant="outline" size="icon" aria-label="باز کردن منو" className="cursor-pointer">
             <Menu className="w-5 h-5" />
           </Button>
         </SheetTrigger>

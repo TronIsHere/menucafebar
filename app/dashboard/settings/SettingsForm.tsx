@@ -124,10 +124,10 @@ export default function SettingsForm({ cafe }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pb-20 sm:pb-0">
       <Card>
-        <CardHeader>
-          <CardTitle>اطلاعات عمومی</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">اطلاعات عمومی</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -150,8 +150,8 @@ export default function SettingsForm({ cafe }: Props) {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>موقعیت و تماس</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">موقعیت و تماس</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -170,8 +170,8 @@ export default function SettingsForm({ cafe }: Props) {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>ساعات کاری</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">ساعات کاری</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-3">
@@ -228,8 +228,8 @@ export default function SettingsForm({ cafe }: Props) {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>میزها</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">میزها</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           <Label>تعداد میزها</Label>
@@ -251,8 +251,8 @@ export default function SettingsForm({ cafe }: Props) {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>باشگاه مشتریان</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">باشگاه مشتریان</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
@@ -289,9 +289,11 @@ export default function SettingsForm({ cafe }: Props) {
         </CardContent>
       </Card>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? "در حال ذخیره..." : "ذخیره تغییرات"}
-      </Button>
+      <div className="fixed bottom-0 inset-x-0 p-4 bg-background/95 backdrop-blur-md border-t lg:static lg:p-0 lg:bg-transparent lg:border-0 lg:backdrop-blur-none">
+        <Button type="submit" disabled={isSubmitting} className="w-full cursor-pointer">
+          {isSubmitting ? "در حال ذخیره..." : "ذخیره تغییرات"}
+        </Button>
+      </div>
     </form>
   );
 }

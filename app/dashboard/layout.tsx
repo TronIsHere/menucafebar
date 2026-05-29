@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   if (!cafe?.isOnboardingComplete) redirect("/onboarding");
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="flex min-h-screen bg-muted/30">
       <Sidebar cafeName={cafe?.name} />
       <div className="flex flex-col flex-1 min-w-0">
         <MobileDashboardHeader cafeName={cafe?.name} />

@@ -90,7 +90,7 @@ function TableQrTile({
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl border bg-white p-4 shadow-sm">
+    <div className="flex flex-col items-center gap-3 rounded-xl border bg-card p-4 shadow-sm">
       <p className="text-sm font-bold">میز {tableNumber}</p>
       <QRCodeCanvas ref={canvasRef} value={menuUrl} size={160} level="M" includeMargin />
       <div className="flex flex-wrap justify-center gap-2">
@@ -193,7 +193,7 @@ export default function MenuQrCode({ cafeSlug, cafeName, tableNumbers = [] }: Pr
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
-          <div className="flex shrink-0 items-center justify-center rounded-xl border bg-white p-4 shadow-sm">
+          <div className="flex shrink-0 items-center justify-center rounded-xl border bg-card p-4 shadow-sm">
             <QRCodeCanvas
               ref={canvasRef}
               value={menuUrl}

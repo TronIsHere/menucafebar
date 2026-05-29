@@ -22,7 +22,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, AlertTriangle, Package } from "@/lib/icons/app-icons";
+import {
+  DashboardAlertBanner,
+  DashboardEmptyState,
+  DashboardStatCard,
+} from "@/components/dashboard/primitives";
+import { formatNum, formatToman } from "@/components/dashboard/format";
+import { Plus, Pencil, Trash2, Package, Users } from "@/lib/icons/app-icons";
 import { parseIntInput } from "@/lib/numerals";
 import {
   formatPriceInput,
@@ -50,10 +56,6 @@ interface Props {
   customers: Customer[];
 }
 
-function formatToman(n: number) {
-  return new Intl.NumberFormat("fa-IR").format(n) + " تومان";
-}
-
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("fa-IR");
 }
@@ -74,6 +76,8 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
   const [loading, setLoading] = useState(false);
 
   const lowStockItems = items.filter((i) => i.quantity <= i.lowThreshold);
+  const totalStock = items.reduce((sum, i) => sum + i.quantity, 0);
+  const topCustomer = [...customers].sort((a, b) => b.totalSpent - a.totalSpent)[0];
 
   function openNew() {
     setEditing(null);
@@ -163,24 +167,48 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
   }
 
   return (
-    <div className="space-y-6">
-      {/* Low stock alert */}
+    <div className="space-y-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <DashboardStatCard
+          title="آیتم‌های انبار"
+          value={formatNum(items.length)}
+          icon={Package}
+          color="text-blue-600"
+          border="border-blue-200 dark:border-blue-900"
+        />
+        <DashboardStatCard
+          title="موجودی کل"
+          value={formatNum(totalStock)}
+          icon={Package}
+          color="text-violet-600"
+          border="border-violet-200 dark:border-violet-900"
+        />
+        <DashboardStatCard
+          title="مشتریان ثبت‌شده"
+          value={formatNum(customers.length)}
+          icon={Users}
+          color="text-emerald-600"
+          border="border-emerald-200 dark:border-emerald-900"
+        />
+        <DashboardStatCard
+          title="بیشترین خرید"
+          value={topCustomer ? formatToman(topCustomer.totalSpent) : "—"}
+          icon={Users}
+          color="text-orange-600"
+          border="border-orange-200 dark:border-orange-900"
+        />
+      </div>
+
       {lowStockItems.length > 0 && (
-        <Card className="border-orange-200 bg-orange-50">
-          <CardContent className="p-4 flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold text-orange-800">هشدار موجودی کم</p>
-              <p className="text-sm text-orange-700 mt-1">
-                {lowStockItems.map((i) => i.name).join("، ")}: موجودی کمتر از حد مجاز
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <DashboardAlertBanner
+          variant="amber"
+          title="هشدار موجودی کم"
+          message={`${lowStockItems.map((i) => i.name).join("، ")}: موجودی کمتر از حد مجاز`}
+        />
       )}
 
       <Tabs defaultValue="inventory">
-        <TabsList className="w-full h-auto flex-wrap sm:flex-nowrap justify-start gap-1">
+        <TabsList className="grid w-full sm:w-auto sm:inline-grid grid-cols-2 h-auto p-1 bg-muted rounded-xl">
           <TabsTrigger value="inventory" className="flex-1 sm:flex-none">مدیریت انبار</TabsTrigger>
           <TabsTrigger value="customers" className="flex-1 sm:flex-none">مشتریان</TabsTrigger>
         </TabsList>
@@ -200,9 +228,17 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
             </CardHeader>
             <CardContent>
               {items.length === 0 ? (
-                <p className="text-muted-foreground text-center py-10">
-                  آیتمی در انبار ثبت نشده است
-                </p>
+                <DashboardEmptyState
+                  icon={Package}
+                  title="آیتمی در انبار ثبت نشده"
+                  description="مواد اولیه و موجودی کافه را اینجا مدیریت کنید"
+                  action={
+                    <Button size="sm" onClick={openNew} className="cursor-pointer gap-1">
+                      <Plus className="w-4 h-4" />
+                      افزودن اولین آیتم
+                    </Button>
+                  }
+                />
               ) : (
                 <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
                   <Table className="min-w-[540px]">
@@ -224,16 +260,16 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => updateQuantity(item, -1)}
-                              className="w-6 h-6 rounded bg-muted text-sm flex items-center justify-center"
+                              className="w-7 h-7 rounded-md border bg-background text-sm flex items-center justify-center cursor-pointer hover:bg-muted"
                             >
                               -
                             </button>
-                            <span className="w-10 text-center">
-                              {item.quantity}
+                            <span className="w-10 text-center tabular-nums">
+                              {formatNum(item.quantity)}
                             </span>
                             <button
                               onClick={() => updateQuantity(item, 1)}
-                              className="w-6 h-6 rounded bg-muted text-sm flex items-center justify-center"
+                              className="w-7 h-7 rounded-md border bg-background text-sm flex items-center justify-center cursor-pointer hover:bg-muted"
                             >
                               +
                             </button>
@@ -293,9 +329,11 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
             </CardHeader>
             <CardContent>
               {customers.length === 0 ? (
-                <p className="text-muted-foreground text-center py-10">
-                  هنوز مشتری با نام ثبت نشده است
-                </p>
+                <DashboardEmptyState
+                  icon={Users}
+                  title="هنوز مشتری با نام ثبت نشده"
+                  description="وقتی مشتریان در سفارش QR نام وارد کنند، اینجا نمایش داده می‌شوند"
+                />
               ) : (
                 <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
                   <Table className="min-w-[480px]">

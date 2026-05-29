@@ -2,6 +2,7 @@ import { getSession, getCafeForOwner } from "@/lib/session";
 import { connectDB } from "@/lib/db/mongoose";
 import { fetchOrderHistory } from "@/lib/orders/history-query";
 import { normalizeOrder } from "@/lib/orders/lifecycle";
+import { DashboardPage, DashboardPageHeader } from "@/components/dashboard/shell";
 import { OrderNav } from "../OrderNav";
 import OrderHistoryTable from "./OrderHistoryTable";
 
@@ -49,16 +50,12 @@ export default async function OrderHistoryPage({ searchParams }: Props) {
   );
 
   return (
-    <div className="p-4 sm:p-6">
-      <div className="mb-2">
-        <h1 className="text-xl sm:text-2xl font-bold">تاریخچه سفارشات</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          مشاهده و جستجوی تمام سفارشات با تاریخ شمسی
-        </p>
-      </div>
-
+    <DashboardPage>
+      <DashboardPageHeader
+        title="تاریخچه سفارشات"
+        description="مشاهده و جستجوی تمام سفارشات با تاریخ شمسی"
+      />
       <OrderNav />
-
       <OrderHistoryTable
         orders={orders}
         stats={result.stats}
@@ -76,6 +73,6 @@ export default async function OrderHistoryPage({ searchParams }: Props) {
           table: params.table ?? "",
         }}
       />
-    </div>
+    </DashboardPage>
   );
 }

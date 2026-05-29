@@ -14,7 +14,7 @@ export function OrderNav() {
   const pathname = usePathname();
 
   return (
-    <div className="flex gap-1 p-1 bg-muted rounded-lg w-fit mb-4 sm:mb-6">
+    <div className="flex gap-1 p-1 bg-muted rounded-xl w-full sm:w-fit">
       {tabs.map((tab) => {
         const isActive = pathname === tab.href;
         return (
@@ -22,13 +22,13 @@ export function OrderNav() {
             key={tab.href}
             href={tab.href}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+              "flex flex-1 sm:flex-initial items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer",
               isActive
                 ? "bg-background text-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            <tab.icon className="w-4 h-4" />
+            <tab.icon className="w-4 h-4 shrink-0" />
             {tab.label}
           </Link>
         );
