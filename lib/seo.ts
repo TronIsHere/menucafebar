@@ -5,16 +5,24 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "https://menucafe.ir";
 
 export const SITE_DESCRIPTION =
-  "منوی دیجیتال QR، مدیریت سفارشات، CRM مشتریان و گزارش فروش. ثبت‌نام رایگان — راه‌اندازی در چند دقیقه برای کافه، رستوران و فست‌فود.";
+  "منو آنلاین کافه با QR — ساخت منو کافه انلاین، مدیریت سفارشات، CRM مشتریان و گزارش فروش. ثبت‌نام رایگان؛ راه‌اندازی در چند دقیقه برای کافه، رستوران و فست‌فود.";
 
+/** Primary search phrases (آنلاین + common انلاین spelling). */
 export const SITE_KEYWORDS = [
+  "منو آنلاین کافه",
+  "منو انلاین کافه",
+  "منو آنلاین",
+  "منو انلاین",
+  "منو کافه",
+  "منو کافه آنلاین",
+  "منو کافه انلاین",
+  "منوی آنلاین",
   "منوی دیجیتال",
   "منوی QR",
   "مدیریت کافه",
   "سیستم سفارشگیری کافه",
   "CRM کافه",
   "نرم‌افزار رستوران",
-  "منوی آنلاین",
   "مدیریت سفارشات کافه",
   APP_NAME,
 ];
@@ -64,7 +72,7 @@ export function createMetadata({
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: `${APP_NAME} — ${APP_TAGLINE}`,
+          alt: `${APP_NAME} | ${APP_TAGLINE}`,
         },
       ],
     },
@@ -102,7 +110,7 @@ export const rootMetadata: Metadata = {
 };
 
 export const landingMetadata: Metadata = createMetadata({
-  title: `${APP_NAME} | منوی دیجیتال QR و مدیریت کافه رایگان`,
+  title: `${APP_NAME} | منو آنلاین کافه — منوی دیجیتال QR رایگان`,
   description: SITE_DESCRIPTION,
   path: "/",
 });

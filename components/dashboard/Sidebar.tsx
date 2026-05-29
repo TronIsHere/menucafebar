@@ -28,6 +28,9 @@ import {
   Menu,
   LayoutGrid,
   History,
+  Headphones,
+  Shield,
+  Coffee,
 } from "@/lib/icons/app-icons";
 
 type NavItem = {
@@ -63,9 +66,21 @@ const navGroups: { label: string; items: NavItem[] }[] = [
   },
   {
     label: "سیستم",
-    items: [{ href: "/dashboard/settings", label: "تنظیمات", icon: Settings }],
+    items: [
+      { href: "/dashboard/support", label: "پشتیبانی", icon: Headphones },
+      { href: "/dashboard/settings", label: "تنظیمات", icon: Settings },
+    ],
   },
 ];
+
+const adminNavGroup: { label: string; items: NavItem[] } = {
+  label: "مدیریت سیستم",
+  items: [
+    { href: "/admin", label: "داشبورد ادمین", icon: Shield, exact: true },
+    { href: "/admin/support", label: "تیکت‌های پشتیبانی", icon: Headphones },
+    { href: "/admin/cafes", label: "کافه‌ها", icon: Coffee },
+  ],
+};
 
 const quickLinks = [
   { href: "/waiter", label: "حالت پیشخدمت", icon: UserCheck },
@@ -73,9 +88,11 @@ const quickLinks = [
 
 function SidebarContent({
   cafeName,
+  isAdmin,
   onNavigate,
 }: {
   cafeName?: string;
+  isAdmin?: boolean;
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
@@ -136,6 +153,38 @@ function SidebarContent({
             </div>
           </div>
         ))}
+
+        {isAdmin && (
+          <div>
+            <p className="text-[10px] font-semibold text-muted-foreground/70 px-3 mb-1.5 uppercase tracking-wider">
+              {adminNavGroup.label}
+            </p>
+            <div className="space-y-0.5">
+              {adminNavGroup.items.map((item) => {
+                const active = isActive(item);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onNavigate}
+                    className={cn(
+                      "relative flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer",
+                      active
+                        ? "bg-violet-500/10 text-violet-700 dark:text-violet-300"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    {active && (
+                      <span className="absolute inset-y-2 start-0 w-0.5 rounded-full bg-violet-500" />
+                    )}
+                    <item.icon className="w-4 h-4 shrink-0" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </nav>
 
       <div className="px-3 pb-2">
@@ -169,7 +218,13 @@ function SidebarContent({
   );
 }
 
-export function MobileDashboardHeader({ cafeName }: { cafeName?: string }) {
+export function MobileDashboardHeader({
+  cafeName,
+  isAdmin,
+}: {
+  cafeName?: string;
+  isAdmin?: boolean;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -185,7 +240,11 @@ export function MobileDashboardHeader({ cafeName }: { cafeName?: string }) {
           className="w-72 p-0 flex flex-col data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right"
         >
           <SheetTitle className="sr-only">منوی ناوبری</SheetTitle>
-          <SidebarContent cafeName={cafeName} onNavigate={() => setOpen(false)} />
+          <SidebarContent
+            cafeName={cafeName}
+            isAdmin={isAdmin}
+            onNavigate={() => setOpen(false)}
+          />
         </SheetContent>
       </Sheet>
       <div className="flex items-center gap-2 min-w-0 flex-1">
@@ -196,10 +255,16 @@ export function MobileDashboardHeader({ cafeName }: { cafeName?: string }) {
   );
 }
 
-export function Sidebar({ cafeName }: { cafeName?: string }) {
+export function Sidebar({
+  cafeName,
+  isAdmin,
+}: {
+  cafeName?: string;
+  isAdmin?: boolean;
+}) {
   return (
     <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-card border-e border-border shrink-0">
-      <SidebarContent cafeName={cafeName} />
+      <SidebarContent cafeName={cafeName} isAdmin={isAdmin} />
     </aside>
   );
 }

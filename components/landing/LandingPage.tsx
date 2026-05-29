@@ -70,7 +70,7 @@ const features = [
   {
     icon: QrCode,
     title: "منوی دیجیتال QR",
-    desc: "منوی آنلاین اختصاصی با QR کد. مشتریان بدون نیاز به گارسون سفارش می‌دهند.",
+    desc: "منو آنلاین کافه اختصاصی با QR. مشتریان بدون گارسون سفارش می‌دهند.",
     color: "text-orange-500",
     bg: "bg-orange-50",
     glow: "group-hover:shadow-[0_0_0_1px_hsl(25_95%_53%/0.3)]",
@@ -557,8 +557,8 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed animate-[lp-fade-up_0.7s_cubic-bezier(0.16,1,0.3,1)_0.16s_both]">
-              از منوی دیجیتال QR تا تحلیل فروش، مدیریت موجودی و CRM مشتریان؛
-              همه چیز در یک پلتفرم یکپارچه.
+              منو آنلاین کافه با QR، تحلیل فروش، مدیریت موجودی و CRM مشتریان —
+              همه‌چیز در یک پلتفرم یکپارچه.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-3 animate-[lp-fade-up_0.7s_cubic-bezier(0.16,1,0.3,1)_0.24s_both]">

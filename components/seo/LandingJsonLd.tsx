@@ -38,6 +38,7 @@ export function LandingJsonLd() {
           description: "پلن رایگان برای شروع",
         },
         featureList: [
+          "منو آنلاین کافه",
           "منوی دیجیتال QR",
           "مدیریت سفارشات زنده",
           "CRM مشتریان",

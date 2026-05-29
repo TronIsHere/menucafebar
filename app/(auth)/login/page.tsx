@@ -28,7 +28,7 @@ type Step = "phone" | "otp";
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/dashboard";
+  const requestedRedirect = searchParams.get("redirect");
 
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState("");
@@ -78,7 +78,15 @@ function LoginForm() {
         return;
       }
       toast.success("ورود موفق");
-      router.push(redirect);
+
+      const postLoginRes = await fetch("/api/auth/post-login");
+      const postLogin = await postLoginRes.json();
+      const destination =
+        requestedRedirect && requestedRedirect !== "/dashboard"
+          ? requestedRedirect
+          : postLogin.redirect ?? "/dashboard";
+
+      router.push(destination);
       router.refresh();
     } catch {
       toast.error("خطا در تایید کد");

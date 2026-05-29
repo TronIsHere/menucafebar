@@ -3,12 +3,13 @@ import { redirect } from "next/navigation";
 import { LandingJsonLd } from "@/components/seo/LandingJsonLd";
 import LandingPage from "@/components/landing/LandingPage";
 import { landingMetadata } from "@/lib/seo";
-import { getSession, getCafeForOwner } from "@/lib/session";
+import { getEnrichedSession, getCafeForOwner } from "@/lib/session";
+import { isAdminRole } from "@/lib/auth/admin";
 
 export const metadata: Metadata = landingMetadata;
 
 export default async function HomePage() {
-  const session = await getSession();
+  const session = await getEnrichedSession();
 
   if (!session) {
     return (
@@ -22,6 +23,9 @@ export default async function HomePage() {
   const cafe = await getCafeForOwner(session.user.id);
 
   if (!cafe?.isOnboardingComplete) {
+    if (isAdminRole(session.user.role)) {
+      redirect("/admin");
+    }
     redirect("/onboarding");
   }
 

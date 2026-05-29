@@ -79,4 +79,6 @@ export {
   LuSmartphone as Smartphone,
   LuShield as Shield,
   LuArrowLeft as ArrowLeft,
+  LuHeadphones as Headphones,
+  LuMessageCircle as MessageCircle,
 } from "react-icons/lu";

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { appRouteMetadata } from "@/lib/seo";
-import { getSession, getCafeForOwner } from "@/lib/session";
+import { getEnrichedSession, getCafeForOwner } from "@/lib/session";
+import { isAdminRole } from "@/lib/auth/admin";
 
 export const metadata: Metadata = appRouteMetadata;
 import { Sidebar, MobileDashboardHeader } from "@/components/dashboard/Sidebar";
@@ -13,17 +14,22 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const session = await getEnrichedSession();
   if (!session) redirect("/login");
 
+  const isAdmin = isAdminRole(session.user.role);
   const cafe = await getCafeForOwner(session.user.id);
-  if (!cafe?.isOnboardingComplete) redirect("/onboarding");
+
+  if (!cafe?.isOnboardingComplete) {
+    if (isAdmin) redirect("/admin");
+    redirect("/onboarding");
+  }
 
   return (
     <div className="flex min-h-screen bg-muted/30">
-      <Sidebar cafeName={cafe?.name} />
+      <Sidebar cafeName={cafe?.name} isAdmin={isAdmin} />
       <div className="flex flex-col flex-1 min-w-0">
-        <MobileDashboardHeader cafeName={cafe?.name} />
+        <MobileDashboardHeader cafeName={cafe?.name} isAdmin={isAdmin} />
         <main className="flex-1 overflow-auto min-w-0">
           <Suspense fallback={null}>
             <DashboardNavOverlay>{children}</DashboardNavOverlay>

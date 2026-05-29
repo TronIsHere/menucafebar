@@ -9,8 +9,8 @@ export function proxy(request: NextRequest) {
 
   const isAuthenticated = !!sessionCookie;
 
-  // Protect dashboard and waiter routes
-  const protectedPaths = ["/dashboard", "/waiter", "/onboarding"];
+  // Protect dashboard, admin, waiter, and onboarding routes
+  const protectedPaths = ["/dashboard", "/admin", "/waiter", "/onboarding"];
   const isProtectedPath = protectedPaths.some((p) => pathname.startsWith(p));
 
   if (isProtectedPath && !isAuthenticated) {

@@ -1,16 +1,50 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
+import { loadOgFonts, OG_FONT_FAMILY, ogSafeText } from "@/lib/og-font";
 import { SITE_DESCRIPTION } from "@/lib/seo";
 
-export const alt = `${APP_NAME} — ${APP_TAGLINE}`;
+export const alt = `${APP_NAME} | ${APP_TAGLINE}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+function CoffeeIcon() {
+  return (
+    <svg
+      width="36"
+      height="36"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+    >
+      <path
+        d="M4 8h12v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8Z"
+        fill="#f97316"
+      />
+      <path
+        d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"
+        stroke="#f97316"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M7 4c0 1.5 1 2.5 2 3"
+        stroke="rgba(255,255,255,0.55)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10 3.5c0 1.5 1 2.5 2 3"
+        stroke="rgba(255,255,255,0.55)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export default async function OpenGraphImage() {
-  const fontPath = join(process.cwd(), "public/fonts/IRANSans-Bold.woff");
-  const fontData = await readFile(fontPath);
+  const fonts = await loadOgFonts();
+  const description = ogSafeText(SITE_DESCRIPTION);
 
   return new ImageResponse(
     (
@@ -26,7 +60,7 @@ export default async function OpenGraphImage() {
           background:
             "linear-gradient(135deg, #111827 0%, #1f2937 45%, #374151 100%)",
           color: "#ffffff",
-          fontFamily: "IranSans",
+          fontFamily: OG_FONT_FAMILY,
           direction: "rtl",
           textAlign: "right",
         }}
@@ -49,10 +83,9 @@ export default async function OpenGraphImage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 36,
             }}
           >
-            ☕
+            <CoffeeIcon />
           </div>
           <div style={{ fontSize: 36, fontWeight: 700 }}>{APP_NAME}</div>
         </div>
@@ -77,7 +110,7 @@ export default async function OpenGraphImage() {
             maxWidth: 880,
           }}
         >
-          {SITE_DESCRIPTION}
+          {description}
         </div>
 
         <div
@@ -96,14 +129,7 @@ export default async function OpenGraphImage() {
     ),
     {
       ...size,
-      fonts: [
-        {
-          name: "IranSans",
-          data: fontData,
-          style: "normal",
-          weight: 700,
-        },
-      ],
+      fonts,
     },
   );
 }
