@@ -11,7 +11,7 @@ export interface ICafe extends Document {
   openTime: string;
   closeTime: string;
   ownerId: string;
-  templateId?: string;
+  templateKey?: string;
   tableNumbers: string[];
   kitchenAutoPrint: boolean;
   printerPaperWidth: "58" | "80";
@@ -33,7 +33,7 @@ const CafeSchema = new Schema<ICafe>(
     openTime: { type: String, required: true, default: "08:00" },
     closeTime: { type: String, required: true, default: "22:00" },
     ownerId: { type: String, required: true, index: true },
-    templateId: { type: String },
+    templateKey: { type: String },
     tableNumbers: { type: [String], default: [] },
     kitchenAutoPrint: { type: Boolean, default: true },
     printerPaperWidth: { type: String, enum: ["58", "80"], default: "80" },

@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
 import MenuItemImage from "@/components/menu/MenuItemImage";
-import { Minus, Plus, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -141,7 +142,7 @@ export default function BentoTemplate({ cafe, categories, items, template }: Tem
                 fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap",
                 boxShadow: active ? `0 2px 10px ${accentColor}44` : "0 1px 4px rgba(0,0,0,0.05)",
               }}>
-                {cat.icon && <span style={{ marginLeft: 6 }}>{cat.icon}</span>}
+                <CategoryIcon icon={cat.icon} size={14} style={{ marginLeft: 6 }} />
                 {cat.name}
               </button>
             );

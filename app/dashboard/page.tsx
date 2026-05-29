@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/db/mongoose";
 import { Order } from "@/lib/db/models/Order";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, Clock, CheckCircle, TrendingUp } from "lucide-react";
+import { ShoppingBag, Clock, CheckCircle, TrendingUp } from "@/lib/icons/app-icons";
 import Link from "next/link";
 
 function formatToman(amount: number) {

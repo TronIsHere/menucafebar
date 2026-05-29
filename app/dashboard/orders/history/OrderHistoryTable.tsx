@@ -49,7 +49,7 @@ import {
   XCircle,
   CheckCircle2,
   Banknote,
-} from "lucide-react";
+} from "@/lib/icons/app-icons";
 
 interface HistoryStats {
   orderCount: number;

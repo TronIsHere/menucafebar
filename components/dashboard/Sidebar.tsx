@@ -28,7 +28,7 @@ import {
   Menu,
   LayoutGrid,
   History,
-} from "lucide-react";
+} from "@/lib/icons/app-icons";
 
 const navItems = [
   { href: "/dashboard", label: "داشبورد", icon: LayoutDashboard, exact: true },

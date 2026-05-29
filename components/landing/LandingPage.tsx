@@ -39,8 +39,8 @@ import {
   NotebookPen,
   MapPin,
   ImageOff,
-  type LucideIcon,
-} from "lucide-react";
+  type AppIcon,
+} from "@/lib/icons/app-icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -211,7 +211,7 @@ type Stat = {
   label: string;
   color: string;
   bg: string;
-  icon: LucideIcon;
+  icon: AppIcon;
   to?: number;
   suffix?: string;
   static?: string;

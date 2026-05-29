@@ -35,7 +35,7 @@ import {
   Timer,
   UtensilsCrossed,
   WifiOff,
-} from "lucide-react";
+} from "@/lib/icons/app-icons";
 
 const statusConfig: Record<
   TableFloorStatus,

@@ -49,10 +49,10 @@ export const demoCafe = {
 };
 
 export const demoCategories = [
-  { name: "قهوه", icon: "☕", order: 0 },
-  { name: "نوشیدنی سرد", icon: "🧊", order: 1 },
-  { name: "دسر", icon: "🍰", order: 2 },
-  { name: "صبحانه", icon: "🥐", order: 3 },
+  { name: "قهوه", icon: "lu:LuCoffee", order: 0 },
+  { name: "نوشیدنی سرد", icon: "lu:LuCupSoda", order: 1 },
+  { name: "دسر", icon: "lu:LuCake", order: 2 },
+  { name: "صبحانه", icon: "lu:LuCroissant", order: 3 },
 ];
 
 export const demoMenuItems = [

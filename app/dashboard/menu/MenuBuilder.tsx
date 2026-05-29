@@ -25,9 +25,16 @@ import {
   UtensilsCrossed,
   QrCode,
   X,
-} from "lucide-react";
+} from "@/lib/icons/app-icons";
+import IconPicker from "@/components/icons/IconPicker";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import MenuQrCode from "@/components/dashboard/MenuQrCode";
 import { getMenuPublicUrl } from "@/lib/utils";
+import {
+  formatPriceInput,
+  isValidPriceInput,
+  parsePriceInput,
+} from "@/lib/prices/format";
 
 interface Category {
   _id: string;
@@ -46,7 +53,7 @@ interface MenuItem {
 }
 
 interface Template {
-  _id: string;
+  templateKey: string;
   name: string;
   description: string;
   primaryColor: string;
@@ -59,7 +66,6 @@ interface Template {
   darkMode?: boolean;
   borderRadius?: "sharp" | "rounded" | "pill";
   categoryTabStyle?: "pill" | "underline" | "chip";
-  templateKey?: string;
 }
 
 interface Props {
@@ -67,7 +73,7 @@ interface Props {
   cafeSlug: string;
   cafeName?: string;
   tableNumbers?: string[];
-  currentTemplateId?: string;
+  currentTemplateKey?: string;
   initialCategories: Category[];
   initialItems: MenuItem[];
   templates: Template[];
@@ -81,7 +87,7 @@ export default function MenuBuilder({
   cafeSlug,
   cafeName,
   tableNumbers = [],
-  currentTemplateId,
+  currentTemplateKey,
   initialCategories,
   initialItems,
   templates,
@@ -89,7 +95,7 @@ export default function MenuBuilder({
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [items, setItems] = useState<MenuItem[]>(initialItems);
-  const [selectedTemplateId, setSelectedTemplateId] = useState(currentTemplateId);
+  const [selectedTemplateKey, setSelectedTemplateKey] = useState(currentTemplateKey);
   const [activeCategoryId, setActiveCategoryId] = useState<string>(
     initialCategories[0]?._id ?? ""
   );
@@ -115,14 +121,14 @@ export default function MenuBuilder({
   const [uploadingImage, setUploadingImage] = useState(false);
 
   // ── Template selection ──────────────────────────────────────────────────────
-  async function selectTemplate(templateId: string) {
+  async function selectTemplate(templateKey: string) {
     const res = await fetch("/api/cafe", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ templateId }),
+      body: JSON.stringify({ templateKey }),
     });
     if (res.ok) {
-      setSelectedTemplateId(templateId);
+      setSelectedTemplateKey(templateKey);
       toast.success("قالب انتخاب شد");
     } else {
       toast.error("خطا در انتخاب قالب");
@@ -211,7 +217,7 @@ export default function MenuBuilder({
     setItemForm({
       name: item.name,
       description: item.description || "",
-      price: item.price.toString(),
+      price: formatPriceInput(item.price),
       available: item.available,
       imageUrl: item.imageUrl || "",
     });
@@ -243,10 +249,11 @@ export default function MenuBuilder({
       toast.error("نام آیتم را وارد کنید");
       return;
     }
-    if (!itemForm.price || Number(itemForm.price) < 0) {
+    if (!isValidPriceInput(itemForm.price)) {
       toast.error("قیمت معتبر وارد کنید");
       return;
     }
+    const price = parsePriceInput(itemForm.price);
     if (!activeCategoryId) {
       toast.error("ابتدا یک دسته‌بندی انتخاب کنید");
       return;
@@ -256,7 +263,7 @@ export default function MenuBuilder({
       const payload = {
         name: itemForm.name,
         description: itemForm.description,
-        price: Number(itemForm.price),
+        price,
         available: itemForm.available,
         categoryId: activeCategoryId,
         imageUrl: itemForm.imageUrl,
@@ -388,10 +395,10 @@ export default function MenuBuilder({
 
               return (
                 <div
-                  key={tpl._id}
-                  onClick={() => selectTemplate(tpl._id)}
+                  key={tpl.templateKey}
+                  onClick={() => selectTemplate(tpl.templateKey)}
                   className={`cursor-pointer rounded-xl overflow-hidden transition-all hover:scale-[1.01] ${
-                    selectedTemplateId === tpl._id
+                    selectedTemplateKey === tpl.templateKey
                       ? "ring-2 ring-primary shadow-lg"
                       : "ring-1 ring-border hover:shadow-md"
                   }`}
@@ -595,7 +602,7 @@ export default function MenuBuilder({
                       )}
                     </div>
 
-                    {selectedTemplateId === tpl._id && (
+                    {selectedTemplateKey === tpl.templateKey && (
                       <div className="absolute top-2 inset-s-2">
                         <CheckCircle className="w-5 h-5 text-white drop-shadow-md" />
                       </div>
@@ -674,8 +681,8 @@ export default function MenuBuilder({
                         : "bg-muted/50 hover:bg-muted"
                     }`}
                   >
-                    <span className="text-sm font-medium truncate flex items-center gap-1">
-                      {cat.icon && <span>{cat.icon}</span>}
+                    <span className="text-sm font-medium truncate flex items-center gap-1.5">
+                      <CategoryIcon icon={cat.icon} size={16} />
                       {cat.name}
                     </span>
                     <div className="flex gap-1 shrink-0">
@@ -748,8 +755,8 @@ export default function MenuBuilder({
                                 className="w-14 h-14 rounded-lg object-cover shrink-0 border border-border"
                               />
                             ) : (
-                              <div className="w-14 h-14 rounded-lg bg-muted flex items-center justify-center text-2xl shrink-0">
-                                🍽️
+                              <div className="w-14 h-14 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                                <UtensilsCrossed className="w-7 h-7 text-muted-foreground/50" />
                               </div>
                             )}
                             <div className="min-w-0">
@@ -823,15 +830,11 @@ export default function MenuBuilder({
                 autoFocus
               />
             </div>
-            <div className="space-y-2">
-              <Label>آیکون (ایموجی)</Label>
-              <Input
-                value={categoryIcon}
-                onChange={(e) => setCategoryIcon(e.target.value)}
-                placeholder="☕"
-                className="text-xl"
-              />
-            </div>
+            <IconPicker
+              value={categoryIcon}
+              onChange={setCategoryIcon}
+              label="آیکون دسته‌بندی"
+            />
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -880,11 +883,18 @@ export default function MenuBuilder({
             <div className="space-y-2">
               <Label>قیمت (تومان) *</Label>
               <Input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={itemForm.price}
-                onChange={(e) => setItemForm((f) => ({ ...f, price: e.target.value }))}
-                placeholder="50000"
+                onChange={(e) =>
+                  setItemForm((f) => ({
+                    ...f,
+                    price: formatPriceInput(e.target.value),
+                  }))
+                }
+                placeholder="۵۰٬۰۰۰"
                 dir="ltr"
+                className="text-left tabular-nums"
               />
             </div>
             <div className="space-y-2">

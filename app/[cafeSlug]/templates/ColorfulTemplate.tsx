@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
 import MenuItemImage from "@/components/menu/MenuItemImage";
-import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -79,7 +80,7 @@ export default function ColorfulTemplate({ cafe, categories, items, template }: 
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: 22,
                   }}>
-                    {cat.icon ?? "🍽️"}
+                    <CategoryIcon icon={cat.icon} size={20} />
                   </div>
                 </div>
                 <span style={{

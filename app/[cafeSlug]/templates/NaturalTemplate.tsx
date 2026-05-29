@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
 import MenuItemImage from "@/components/menu/MenuItemImage";
-import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -103,7 +104,7 @@ export default function NaturalTemplate({ cafe, categories, items, template }: T
                 fontSize: 12, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap",
                 transition: "all 0.2s",
               }}>
-                {cat.icon && <span style={{ marginLeft: 4 }}>{cat.icon}</span>}
+                <CategoryIcon icon={cat.icon} size={14} style={{ marginLeft: 4 }} />
                 {cat.name}
               </button>
             );
@@ -133,7 +134,7 @@ export default function NaturalTemplate({ cafe, categories, items, template }: T
                     fontSize: 15, fontWeight: 800, margin: 0, color: primaryColor,
                     letterSpacing: "0.02em",
                   }}>
-                    {cat.icon && <span style={{ marginLeft: 5 }}>{cat.icon}</span>}
+                    <CategoryIcon icon={cat.icon} size={14} style={{ marginLeft: 5 }} />
                     {cat.name}
                   </h2>
                   <span style={{ fontSize: 14 }}>🌱</span>

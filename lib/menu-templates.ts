@@ -1,11 +1,38 @@
-import mongoose from "mongoose";
-import { MenuTemplate } from "./models/MenuTemplate";
+export type MenuLayoutType =
+  | "grid"
+  | "list"
+  | "card"
+  | "magazine"
+  | "sidebar"
+  | "accordion"
+  | "bento"
+  | "retro"
+  | "tiles";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/menucaffe";
+export type MenuHeaderStyle = "standard" | "minimal" | "hero";
+export type MenuBorderRadius = "sharp" | "rounded" | "pill";
+export type MenuCategoryTabStyle = "pill" | "underline" | "chip";
 
-const templates = [
+export interface MenuTemplateDefinition {
+  templateKey: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  primaryColor: string;
+  accentColor: string;
+  bgColor: string;
+  cardBg: string;
+  textColor: string;
+  layoutType: MenuLayoutType;
+  headerStyle: MenuHeaderStyle;
+  darkMode: boolean;
+  borderRadius: MenuBorderRadius;
+  categoryTabStyle: MenuCategoryTabStyle;
+}
+
+export const MENU_TEMPLATES: MenuTemplateDefinition[] = [
   {
-    // Traditional editorial feel — sharp edges, underline tabs, horizontal list rows
+    templateKey: "classic",
     name: "کلاسیک",
     description: "طراحی کلاسیک و شیک با لبه‌های تیز، تایپوگرافی قوی و ردیف‌های خوانا",
     thumbnail: "/templates/classic.png",
@@ -19,10 +46,9 @@ const templates = [
     darkMode: false,
     borderRadius: "sharp",
     categoryTabStyle: "underline",
-    templateKey: "classic",
   },
   {
-    // Tech/startup minimal feel — rounded chips, grid, compact header
+    templateKey: "modern",
     name: "مدرن",
     description: "طراحی مینیمال با چیپ‌های دسته‌بندی، شبکه تمیز و هدر فشرده",
     thumbnail: "/templates/modern.png",
@@ -36,10 +62,9 @@ const templates = [
     darkMode: false,
     borderRadius: "rounded",
     categoryTabStyle: "chip",
-    templateKey: "modern",
   },
   {
-    // Playful/bubbly — pill everything, full-card browse, big hero
+    templateKey: "colorful",
     name: "رنگارنگ",
     description: "طراحی پرانرژی و بازیگوشانه با اشکال گرد، هدر بزرگ و کارت‌های صفحه‌پر",
     thumbnail: "/templates/colorful.png",
@@ -53,10 +78,9 @@ const templates = [
     darkMode: false,
     borderRadius: "pill",
     categoryTabStyle: "pill",
-    templateKey: "colorful",
   },
   {
-    // Organic/soft — pill shapes, grid, warm greens
+    templateKey: "natural",
     name: "طبیعی",
     description: "طراحی ارگانیک با اشکال نرم، رنگ‌های زمینی و احساس طبیعی و صمیمی",
     thumbnail: "/templates/natural.png",
@@ -70,10 +94,9 @@ const templates = [
     darkMode: false,
     borderRadius: "pill",
     categoryTabStyle: "pill",
-    templateKey: "natural",
   },
   {
-    // Premium dark/neon — rounded, chip tabs, dark card layout
+    templateKey: "dark",
     name: "شب تاریک",
     description: "طراحی تاریک و پرمیوم با لهجه‌های نئون، کارت‌های بزرگ و احساس شبانه",
     thumbnail: "/templates/dark.png",
@@ -87,10 +110,9 @@ const templates = [
     darkMode: true,
     borderRadius: "rounded",
     categoryTabStyle: "chip",
-    templateKey: "dark",
   },
   {
-    // Cozy/warm — rounded, pill tabs, magazine layout, hero header
+    templateKey: "warm",
     name: "گرم",
     description: "طراحی گرم و دنج با چیدمان مجله‌ای، هدر بزرگ و رنگ‌های قهوه‌ای دلنشین",
     thumbnail: "/templates/warm.png",
@@ -104,10 +126,9 @@ const templates = [
     darkMode: false,
     borderRadius: "rounded",
     categoryTabStyle: "pill",
-    templateKey: "warm",
   },
   {
-    // Fresh/coastal — rounded, underline tabs, airy grid
+    templateKey: "ocean",
     name: "اقیانوس",
     description: "طراحی تازه و آبی با تب‌های زیرخط‌دار، شبکه هوایی و احساس ساحلی",
     thumbnail: "/templates/ocean.png",
@@ -121,10 +142,9 @@ const templates = [
     darkMode: false,
     borderRadius: "rounded",
     categoryTabStyle: "underline",
-    templateKey: "ocean",
   },
   {
-    // Luxury dark — sharp edges, underline tabs, dark magazine, hero header
+    templateKey: "chocolate",
     name: "شکلاتی",
     description: "طراحی لوکس و تاریک با لبه‌های شارپ، چیدمان مجله‌ای و رنگ‌های شکلاتی",
     thumbnail: "/templates/chocolate.png",
@@ -138,9 +158,9 @@ const templates = [
     darkMode: true,
     borderRadius: "sharp",
     categoryTabStyle: "underline",
-    templateKey: "chocolate",
   },
   {
+    templateKey: "sidebar",
     name: "سایدبار",
     description: "ناوبری عمودی در کنار صفحه با آیکون‌های دسته‌بندی — چیدمان دو ستونه منحصربفرد",
     thumbnail: "/templates/sidebar.png",
@@ -154,9 +174,9 @@ const templates = [
     darkMode: false,
     borderRadius: "rounded",
     categoryTabStyle: "chip",
-    templateKey: "sidebar",
   },
   {
+    templateKey: "accordion",
     name: "آکاردئون",
     description: "همه دسته‌ها به صورت بخش‌های بازشونده — بدون تب، مناسب منوهای کوتاه",
     thumbnail: "/templates/accordion.png",
@@ -170,9 +190,9 @@ const templates = [
     darkMode: false,
     borderRadius: "rounded",
     categoryTabStyle: "underline",
-    templateKey: "accordion",
   },
   {
+    templateKey: "bento",
     name: "بنتو",
     description: "شبکه نامتقارن با کاشی بزرگ ویژه — طراحی مدرن و بازیگوش",
     thumbnail: "/templates/bento.png",
@@ -186,9 +206,9 @@ const templates = [
     darkMode: false,
     borderRadius: "pill",
     categoryTabStyle: "pill",
-    templateKey: "bento",
   },
   {
+    templateKey: "retro",
     name: "رترو",
     description: "منوی کلاسیک با خط‌چین بین نام و قیمت — احساس رستوران قدیمی",
     thumbnail: "/templates/retro.png",
@@ -202,9 +222,9 @@ const templates = [
     darkMode: false,
     borderRadius: "sharp",
     categoryTabStyle: "underline",
-    templateKey: "retro",
   },
   {
+    templateKey: "tiles",
     name: "کاشی",
     description: "کارت‌های تمام‌صفحه با تصویر پس‌زمینه و گرادیان — شبیه اپ‌های فود",
     thumbnail: "/templates/tiles.png",
@@ -218,24 +238,35 @@ const templates = [
     darkMode: false,
     borderRadius: "pill",
     categoryTabStyle: "pill",
-    templateKey: "tiles",
   },
 ];
 
-async function seed() {
-  await mongoose.connect(MONGODB_URI);
-  console.log("Connected to MongoDB");
+const templateByKey = new Map(
+  MENU_TEMPLATES.map((template) => [template.templateKey, template])
+);
 
-  await MenuTemplate.deleteMany({});
-  console.log("Cleared existing templates");
+export const DEFAULT_TEMPLATE_KEY = MENU_TEMPLATES[0].templateKey;
 
-  await MenuTemplate.insertMany(templates);
-  console.log(`Seeded ${templates.length} menu templates`);
-
-  await mongoose.disconnect();
+export function isValidTemplateKey(key: string): boolean {
+  return templateByKey.has(key);
 }
 
-seed().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+export function getMenuTemplate(
+  templateKey?: string | null
+): MenuTemplateDefinition {
+  if (templateKey && templateByKey.has(templateKey)) {
+    return templateByKey.get(templateKey)!;
+  }
+  return MENU_TEMPLATES[0];
+}
+
+/** Supports legacy `templateId` field from before templates moved to code. */
+export function resolveCafeTemplateKey(cafe: {
+  templateKey?: string | null;
+  templateId?: string | null;
+}): string {
+  if (cafe.templateKey && isValidTemplateKey(cafe.templateKey)) {
+    return cafe.templateKey;
+  }
+  return DEFAULT_TEMPLATE_KEY;
+}

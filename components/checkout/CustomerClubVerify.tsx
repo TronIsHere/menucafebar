@@ -11,7 +11,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { formatPhone } from "@/lib/customer-club/phone";
-import { Gift, Phone } from "lucide-react";
+import { Gift, Phone } from "@/lib/icons/app-icons";
 
 type Step = "phone" | "otp" | "verified";
 

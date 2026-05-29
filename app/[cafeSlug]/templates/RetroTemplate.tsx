@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
-import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -81,7 +82,7 @@ export default function RetroTemplate({ cafe, categories, items, template }: Tem
               cursor: "pointer", whiteSpace: "nowrap",
               transition: "all 0.15s",
             }}>
-              {cat.icon && <span style={{ marginLeft: 6 }}>{cat.icon}</span>}
+              <CategoryIcon icon={cat.icon} size={14} style={{ marginLeft: 6 }} />
               {cat.name}
             </button>
           );

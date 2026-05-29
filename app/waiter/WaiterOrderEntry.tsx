@@ -10,7 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import TablePicker from "@/components/tables/TablePicker";
-import { Minus, Plus, ShoppingCart, Trash2, Send } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Trash2, Send } from "@/lib/icons/app-icons";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
 
 interface Category {
   _id: string;
@@ -159,7 +160,7 @@ export default function WaiterOrderEntry({ categories, items, tableNumbers }: Pr
                     : "bg-card border border-border hover:bg-muted"
                 }`}
               >
-                {cat.icon && <span className="me-1">{cat.icon}</span>}
+                <CategoryIcon icon={cat.icon} size={14} className="me-1 inline-block" />
                 {cat.name}
               </button>
             ))}

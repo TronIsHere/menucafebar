@@ -23,7 +23,7 @@ import {
   Clock,
   Award,
   Minus,
-} from "lucide-react";
+} from "@/lib/icons/app-icons";
 import { cn } from "@/lib/utils";
 
 interface DailyRevenue {

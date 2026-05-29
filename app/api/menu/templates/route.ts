@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectDB } from "@/lib/db/mongoose";
-import { MenuTemplate } from "@/lib/db/models/MenuTemplate";
+import { MENU_TEMPLATES } from "@/lib/menu-templates";
 
 export async function GET() {
-  await connectDB();
-  const templates = await MenuTemplate.find().lean();
-  return NextResponse.json({ templates });
+  return NextResponse.json({ templates: MENU_TEMPLATES });
 }

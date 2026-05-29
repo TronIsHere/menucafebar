@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { History, Radio } from "lucide-react";
+import { History, Radio } from "@/lib/icons/app-icons";
 
 const tabs = [
   { href: "/dashboard/orders", label: "سفارشات زنده", icon: Radio },

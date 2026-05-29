@@ -13,7 +13,7 @@ import {
   statusLabels,
   timeAgo,
 } from "@/lib/orders/lifecycle";
-import { Bell, CheckCircle2, ChefHat, Clock, Wifi, WifiOff } from "lucide-react";
+import { Bell, CheckCircle2, ChefHat, Clock, Wifi, WifiOff } from "@/lib/icons/app-icons";
 
 interface Props {
   liveOrders: ReturnType<typeof useOrdersLive>;

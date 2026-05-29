@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
 import MenuItemImage from "@/components/menu/MenuItemImage";
-import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -98,7 +99,7 @@ export default function OceanTemplate({ cafe, categories, items, template }: Tem
                 marginBottom: -2,
                 cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.15s",
               }}>
-                {cat.icon && <span style={{ marginLeft: 5 }}>{cat.icon}</span>}
+                <CategoryIcon icon={cat.icon} size={14} style={{ marginLeft: 5 }} />
                 {cat.name}
               </button>
             );
@@ -119,7 +120,7 @@ export default function OceanTemplate({ cafe, categories, items, template }: Tem
               {/* Clean section header */}
               <div style={{ padding: "28px 0 16px", display: "flex", alignItems: "center", gap: 12 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: primaryColor }}>
-                  {cat.icon && <span style={{ marginLeft: 6 }}>{cat.icon}</span>}
+                  <CategoryIcon icon={cat.icon} size={14} style={{ marginLeft: 6 }} />
                   {cat.name}
                 </h2>
                 <div style={{ flex: 1, height: 1, backgroundColor: `${primaryColor}20` }} />

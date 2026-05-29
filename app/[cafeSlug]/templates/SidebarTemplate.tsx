@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
 import MenuItemImage from "@/components/menu/MenuItemImage";
-import { Minus, Plus, Clock, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -83,7 +84,7 @@ export default function SidebarTemplate({ cafe, categories, items, template }: T
                   fontSize: 22, boxShadow: active ? `0 4px 12px ${accentColor}40` : "none",
                   transition: "all 0.2s ease",
                 }}>
-                  {cat.icon ?? "🍽️"}
+                  <CategoryIcon icon={cat.icon} size={20} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
                   <span style={{

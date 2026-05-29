@@ -13,7 +13,7 @@ import {
   lifecycleColumns,
   timeAgo,
 } from "@/lib/orders/lifecycle";
-import { Clock, ChefHat, CheckCircle2, Wifi, WifiOff, Banknote, Receipt } from "lucide-react";
+import { Clock, ChefHat, CheckCircle2, Wifi, WifiOff, Banknote, Receipt } from "@/lib/icons/app-icons";
 
 export type { Order, OrderItem } from "@/lib/orders/lifecycle";
 

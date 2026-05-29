@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Copy, Download, ExternalLink, Printer, QrCode } from "lucide-react";
+import { Copy, Download, ExternalLink, Printer, QrCode } from "@/lib/icons/app-icons";
 import { getMenuPublicUrl } from "@/lib/utils";
 
 interface Props {

@@ -1,9 +1,12 @@
-import { UtensilsCrossed } from "lucide-react";
+"use client";
+
+import type { CSSProperties } from "react";
+import { LuUtensilsCrossed } from "react-icons/lu";
 
 type MenuItemImageProps = {
   imageUrl?: string;
   alt: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   iconSize?: number;
   iconColor?: string;
   objectFit?: "contain" | "cover";
@@ -17,7 +20,7 @@ export default function MenuItemImage({
   iconColor = "rgba(0,0,0,0.2)",
   objectFit = "contain",
 }: MenuItemImageProps) {
-  const containerStyle: React.CSSProperties = {
+  const containerStyle: CSSProperties = {
     overflow: "hidden",
     display: "flex",
     alignItems: "center",
@@ -45,9 +48,7 @@ export default function MenuItemImage({
 
   return (
     <div style={containerStyle}>
-      <UtensilsCrossed
-        style={{ width: iconSize, height: iconSize, color: iconColor }}
-      />
+      <LuUtensilsCrossed size={iconSize} style={{ color: iconColor }} />
     </div>
   );
 }

@@ -10,7 +10,7 @@ import {
   type KitchenTicketOrder,
   type PaperWidth,
 } from "@/lib/print/kitchen-ticket";
-import { ChefHat, Printer, Wifi, WifiOff } from "lucide-react";
+import { ChefHat, Printer, Wifi, WifiOff } from "@/lib/icons/app-icons";
 
 interface Order extends KitchenTicketOrder {
   total: number;

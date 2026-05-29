@@ -23,7 +23,7 @@ import {
   Wifi,
   WifiOff,
   X,
-} from "lucide-react";
+} from "@/lib/icons/app-icons";
 
 interface Props {
   cafeSlug: string;

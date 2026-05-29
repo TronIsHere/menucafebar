@@ -15,7 +15,7 @@ import CustomerClubVerify, {
 } from "@/components/checkout/CustomerClubVerify";
 import { calculateDiscount } from "@/lib/customer-club/discount";
 import { toast } from "sonner";
-import { ArrowRight, Minus, Plus, Trash2 } from "lucide-react";
+import { ArrowRight, Minus, Plus, Trash2 } from "@/lib/icons/app-icons";
 import Link from "next/link";
 
 interface Cafe {

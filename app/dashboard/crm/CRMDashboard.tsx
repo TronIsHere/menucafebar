@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, AlertTriangle, Package } from "lucide-react";
+import { Plus, Pencil, Trash2, AlertTriangle, Package } from "@/lib/icons/app-icons";
 
 interface InventoryItem {
   _id: string;

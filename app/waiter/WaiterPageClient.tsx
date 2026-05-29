@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ClipboardList, ShoppingCart } from "lucide-react";
+import { ClipboardList, ShoppingCart } from "@/lib/icons/app-icons";
 import { cn } from "@/lib/utils";
 import { useOrdersLive } from "@/hooks/useOrdersLive";
 import type { Order } from "@/lib/orders/lifecycle";

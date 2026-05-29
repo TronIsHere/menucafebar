@@ -44,13 +44,7 @@ KAVENEGAR_VERIFY_TEMPLATE=verify
 MASTER_OTP=000000
 ```
 
-### ۲. Seed قالب‌های منو
-
-```bash
-npm run seed
-```
-
-### ۳. اجرا
+### ۲. اجرا
 
 ```bash
 npm run dev

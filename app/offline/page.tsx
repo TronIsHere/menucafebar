@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw } from "@/lib/icons/app-icons";
 import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/brand";
 import { AppLogo } from "@/components/brand/AppLogo";

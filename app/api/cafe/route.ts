@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/mongoose";
 import { Cafe } from "@/lib/db/models/Cafe";
 import { getSession } from "@/lib/session";
+import { isValidTemplateKey } from "@/lib/menu-templates";
 import { z } from "zod";
 
 const cafeSchema = z.object({
@@ -85,6 +86,11 @@ export async function PATCH(request: NextRequest) {
   }
 
   const body = await request.json();
+
+  if (body.templateKey !== undefined && !isValidTemplateKey(body.templateKey)) {
+    return NextResponse.json({ error: "قالب نامعتبر است" }, { status: 400 });
+  }
+
   await connectDB();
 
   const cafe = await Cafe.findOneAndUpdate(

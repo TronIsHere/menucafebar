@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
 import MenuItemImage from "@/components/menu/MenuItemImage";
-import { Minus, Plus, Search, ShoppingBag, UtensilsCrossed } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, Search, ShoppingBag, UtensilsCrossed } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -96,7 +97,7 @@ export default function ModernTemplate({ cafe, categories, items, template }: Te
                 fontSize: 12, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap",
                 transition: "all 0.15s",
               }}>
-                {cat.icon && <span>{cat.icon}</span>}
+                <CategoryIcon icon={cat.icon} size={14} />
                 {cat.name}
                 <span style={{
                   fontSize: 10, fontWeight: 700,

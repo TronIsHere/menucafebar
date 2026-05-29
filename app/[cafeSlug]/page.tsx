@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/db/mongoose";
 import { Cafe } from "@/lib/db/models/Cafe";
 import { Category } from "@/lib/db/models/Category";
 import { MenuItem } from "@/lib/db/models/MenuItem";
-import { MenuTemplate } from "@/lib/db/models/MenuTemplate";
+import { getMenuTemplate, resolveCafeTemplateKey } from "@/lib/menu-templates";
 import CustomerMenu from "./CustomerMenu";
 
 interface Props {
@@ -30,22 +30,21 @@ export default async function CafeMenuPage({ params, searchParams }: Props) {
   const cafe = await Cafe.findOne({ slug: cafeSlug, isOnboardingComplete: true }).lean();
   if (!cafe) notFound();
 
-  const [categories, items, template] = await Promise.all([
+  const [categories, items] = await Promise.all([
     Category.find({ cafeId: cafe._id.toString() }).sort({ order: 1 }).lean(),
     MenuItem.find({ cafeId: cafe._id.toString(), available: true })
       .sort({ order: 1 })
       .lean(),
-    cafe.templateId
-      ? MenuTemplate.findById(cafe.templateId).lean()
-      : null,
   ]);
+
+  const template = getMenuTemplate(resolveCafeTemplateKey(cafe));
 
   return (
     <CustomerMenu
       cafe={JSON.parse(JSON.stringify(cafe))}
       categories={JSON.parse(JSON.stringify(categories))}
       items={JSON.parse(JSON.stringify(items))}
-      template={template ? JSON.parse(JSON.stringify(template)) : null}
+      template={template}
       tableFromUrl={tableFromUrl}
     />
   );

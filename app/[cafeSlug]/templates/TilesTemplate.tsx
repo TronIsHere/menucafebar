@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/cart";
 import TableCartLabel from "@/components/menu/TableCartLabel";
 import MenuItemImage from "@/components/menu/MenuItemImage";
-import { Minus, Plus, Clock, UtensilsCrossed, ShoppingBag } from "lucide-react";
+import { CategoryIcon } from "@/components/icons/CategoryIcon";
+import { Minus, Plus, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
 import { fmt } from "./types";
 
@@ -60,7 +61,7 @@ export default function TilesTemplate({ cafe, categories, items, template }: Tem
                 border: active ? "none" : `1.5px solid ${textColor}15`,
                 fontSize: 12, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap",
               }}>
-                {cat.icon && <span style={{ marginLeft: 5 }}>{cat.icon}</span>}
+                <CategoryIcon icon={cat.icon} size={14} style={{ marginLeft: 5 }} />
                 {cat.name}
               </button>
             );
