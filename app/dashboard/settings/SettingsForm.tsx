@@ -11,17 +11,35 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { getMenuPublicUrl } from "@/lib/utils";
 import { generateTableNumbers, getTableCount } from "@/lib/tables";
+import { parseDigits, parseIntInput, toLatinDigits } from "@/lib/numerals";
 
 const schema = z.object({
   name: z.string().min(2),
   address: z.string().min(5),
   city: z.string().min(2),
-  phone: z.string().min(10),
-  openTime: z.string().regex(/^\d{2}:\d{2}$/),
-  closeTime: z.string().regex(/^\d{2}:\d{2}$/),
-  tableCount: z.number().min(0).max(100),
+  phone: z.preprocess(
+    (val) => (typeof val === "string" ? parseDigits(val) : val),
+    z.string().min(10)
+  ),
+  openTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/)
+  ),
+  closeTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/)
+  ),
+  tableCount: z.preprocess((val) => {
+    if (typeof val === "number") return val;
+    const n = parseIntInput(String(val ?? ""));
+    return Number.isNaN(n) ? 0 : n;
+  }, z.number().min(0).max(100)),
   customerClubDiscountEnabled: z.boolean(),
-  newCustomerDiscountPercent: z.number().min(0).max(100),
+  newCustomerDiscountPercent: z.preprocess((val) => {
+    if (typeof val === "number") return val;
+    const n = parseIntInput(String(val ?? ""));
+    return Number.isNaN(n) ? 0 : n;
+  }, z.number().min(0).max(100)),
 });
 
 type FormInput = z.input<typeof schema>;
@@ -130,7 +148,7 @@ export default function SettingsForm({ cafe }: Props) {
           </div>
           <div className="space-y-2">
             <Label>شماره تلفن</Label>
-            <Input {...register("phone")} dir="ltr" />
+            <Input type="tel" {...register("phone")} dir="ltr" />
           </div>
         </CardContent>
       </Card>
@@ -165,7 +183,7 @@ export default function SettingsForm({ cafe }: Props) {
             max={100}
             dir="ltr"
             placeholder="مثال: ۱۰"
-            {...register("tableCount", { valueAsNumber: true })}
+            {...register("tableCount")}
           />
           {errors.tableCount && (
             <p className="text-destructive text-xs">{errors.tableCount.message}</p>
@@ -203,7 +221,7 @@ export default function SettingsForm({ cafe }: Props) {
                 min={0}
                 max={100}
                 dir="ltr"
-                {...register("newCustomerDiscountPercent", { valueAsNumber: true })}
+                {...register("newCustomerDiscountPercent")}
               />
               {errors.newCustomerDiscountPercent && (
                 <p className="text-destructive text-xs">

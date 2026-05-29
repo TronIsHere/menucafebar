@@ -3,22 +3,27 @@
 import * as React from "react"
 import { OTPInput, OTPInputContext } from "input-otp"
 import { Dot } from "@/lib/icons/app-icons"
+import { parseOtpInput } from "@/lib/numerals"
 
 import { cn } from "@/lib/utils"
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
   React.ComponentPropsWithoutRef<typeof OTPInput>
->(({ className, containerClassName, ...props }, ref) => (
+>(({ className, containerClassName, onChange, maxLength, ...props }, ref) => (
   <div dir="ltr">
     <OTPInput
       ref={ref}
+      maxLength={maxLength}
       containerClassName={cn(
         "flex flex-row items-center gap-2 has-[:disabled]:opacity-50",
         containerClassName
       )}
       className={cn("disabled:cursor-not-allowed", className)}
       dir="ltr"
+      onChange={(value) =>
+        onChange?.(parseOtpInput(value, maxLength))
+      }
       {...props}
     />
   </div>

@@ -11,21 +11,32 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { parseDigits, toLatinDigits } from "@/lib/numerals";
 
 const schema = z.object({
   name: z.string().min(2, "نام کافه باید حداقل ۲ کاراکتر باشد"),
   address: z.string().min(5, "آدرس باید حداقل ۵ کاراکتر باشد"),
   city: z.string().min(2, "شهر را وارد کنید"),
-  phone: z.string().min(10, "شماره تلفن معتبر وارد کنید"),
-  openTime: z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه"),
-  closeTime: z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه"),
+  phone: z.preprocess(
+    (val) => (typeof val === "string" ? parseDigits(val) : val),
+    z.string().min(10, "شماره تلفن معتبر وارد کنید")
+  ),
+  openTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه")
+  ),
+  closeTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه")
+  ),
   slug: z
     .string()
     .min(3, "حداقل ۳ کاراکتر")
     .regex(/^[a-z0-9-]+$/, "فقط حروف انگلیسی کوچک، اعداد و خط تیره"),
 });
 
-type FormData = z.infer<typeof schema>;
+type FormInput = z.input<typeof schema>;
+type FormData = z.output<typeof schema>;
 
 const STEPS = [
   { title: "اطلاعات کافه", description: "نام و شناسه کافه خود را وارد کنید" },
@@ -53,7 +64,7 @@ export default function OnboardingWizard() {
     setValue,
     trigger,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<FormInput, unknown, FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       openTime: "08:00",

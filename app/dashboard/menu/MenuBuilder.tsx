@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRef, useState, type DragEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -83,6 +82,9 @@ function formatToman(n: number) {
   return new Intl.NumberFormat("fa-IR").format(n) + " تومان";
 }
 
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
 export default function MenuBuilder({
   cafeSlug,
   cafeName,
@@ -92,7 +94,6 @@ export default function MenuBuilder({
   initialItems,
   templates,
 }: Props) {
-  const router = useRouter();
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [items, setItems] = useState<MenuItem[]>(initialItems);
   const [selectedTemplateKey, setSelectedTemplateKey] = useState(currentTemplateKey);
@@ -119,6 +120,9 @@ export default function MenuBuilder({
 
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [imageUploadName, setImageUploadName] = useState("");
+  const [isImageDragging, setIsImageDragging] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
 
   // ── Template selection ──────────────────────────────────────────────────────
   async function selectTemplate(templateKey: string) {
@@ -224,7 +228,22 @@ export default function MenuBuilder({
     setItemDialog(true);
   }
 
+  function validateImageFile(file: File) {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error("فرمت تصویر پشتیبانی نمی‌شود");
+      return false;
+    }
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error("حجم تصویر باید کمتر از ۵ مگابایت باشد");
+      return false;
+    }
+    return true;
+  }
+
   async function handleImageUpload(file: File) {
+    if (!validateImageFile(file)) return;
+
+    setImageUploadName(file.name);
     setUploadingImage(true);
     try {
       const formData = new FormData();
@@ -241,7 +260,18 @@ export default function MenuBuilder({
       toast.error(error instanceof Error ? error.message : "خطا در آپلود تصویر");
     } finally {
       setUploadingImage(false);
+      setImageUploadName("");
     }
+  }
+
+  function handleImageDrop(event: DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    setIsImageDragging(false);
+    if (uploadingImage) return;
+
+    const file = event.dataTransfer.files?.[0];
+    if (file) void handleImageUpload(file);
   }
 
   async function saveItem() {
@@ -898,46 +928,107 @@ export default function MenuBuilder({
               />
             </div>
             <div className="space-y-2">
-              <Label>تصویر</Label>
-              <div className="flex items-start gap-3">
-                {itemForm.imageUrl ? (
-                  <div className="relative shrink-0">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={itemForm.imageUrl}
-                      alt="پیش‌نمایش"
-                      className="w-24 h-24 rounded-lg object-cover border border-border"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setItemForm((f) => ({ ...f, imageUrl: "" }))}
-                      className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-sm"
-                      aria-label="حذف تصویر"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
+              <Label>تصویر آیتم</Label>
+              <div
+                onDragOver={(event) => {
+                  event.preventDefault();
+                  if (!uploadingImage) setIsImageDragging(true);
+                }}
+                onDragLeave={() => setIsImageDragging(false)}
+                onDrop={handleImageDrop}
+                className={`rounded-xl border-2 border-dashed p-3 transition-colors ${
+                  isImageDragging
+                    ? "border-primary bg-primary/5"
+                    : "border-border bg-muted/30"
+                }`}
+              >
+                <Input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  disabled={uploadingImage}
+                  className="sr-only"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) void handleImageUpload(file);
+                    e.target.value = "";
+                  }}
+                />
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                  <div className="relative h-32 w-full overflow-hidden rounded-lg border border-border bg-background sm:h-28 sm:w-32 sm:shrink-0">
+                    {itemForm.imageUrl ? (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={itemForm.imageUrl}
+                          alt="پیش‌نمایش تصویر آیتم"
+                          className="h-full w-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setItemForm((f) => ({ ...f, imageUrl: "" }))}
+                          className="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm hover:bg-background"
+                          aria-label="حذف تصویر"
+                          disabled={uploadingImage}
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </>
+                    ) : (
+                      <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-3 text-center text-muted-foreground">
+                        <UtensilsCrossed className="h-8 w-8 opacity-50" />
+                        <span className="block text-xs leading-5">
+                          هنوز تصویری انتخاب نشده
+                        </span>
+                      </div>
+                    )}
+                    {uploadingImage && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/80 text-sm font-medium text-foreground backdrop-blur-sm">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                        <span>در حال آپلود</span>
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="w-24 h-24 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                    <UtensilsCrossed className="w-8 h-8 text-muted-foreground/50" />
+                  <div className="flex-1 space-y-3">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">
+                        تصویر غذا یا نوشیدنی را اینجا بکشید
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        یا از دکمه انتخاب تصویر استفاده کنید. JPG، PNG، WebP یا GIF تا
+                        ۵ مگابایت پذیرفته می‌شود.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => imageInputRef.current?.click()}
+                        disabled={uploadingImage}
+                      >
+                        {itemForm.imageUrl ? "تغییر تصویر" : "انتخاب تصویر"}
+                      </Button>
+                      {itemForm.imageUrl && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setItemForm((f) => ({ ...f, imageUrl: "" }))}
+                          disabled={uploadingImage}
+                        >
+                          حذف تصویر
+                        </Button>
+                      )}
+                    </div>
+                    <p className="min-h-4 text-xs text-muted-foreground">
+                      {uploadingImage
+                        ? `${imageUploadName || "تصویر"} در حال آپلود است...`
+                        : itemForm.imageUrl
+                          ? "تصویر آماده است و همراه آیتم ذخیره می‌شود."
+                          : "تصویر اختیاری است، اما به جذاب‌تر شدن منو کمک می‌کند."}
+                    </p>
                   </div>
-                )}
-                <div className="flex-1 space-y-2">
-                  <Input
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/gif"
-                    disabled={uploadingImage}
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) void handleImageUpload(file);
-                      e.target.value = "";
-                    }}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    {uploadingImage
-                      ? "در حال آپلود..."
-                      : "JPG، PNG، WebP یا GIF — حداکثر ۵ مگابایت"}
-                  </p>
                 </div>
               </div>
             </div>
@@ -962,7 +1053,11 @@ export default function MenuBuilder({
               >
                 لغو
               </Button>
-              <Button className="flex-1" onClick={saveItem} disabled={loading}>
+              <Button
+                className="flex-1"
+                onClick={saveItem}
+                disabled={loading || uploadingImage}
+              >
                 {loading ? "در حال ذخیره..." : "ذخیره"}
               </Button>
             </div>

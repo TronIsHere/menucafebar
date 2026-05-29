@@ -231,6 +231,7 @@ export default function WaiterOrderEntry({ categories, items, tableNumbers }: Pr
               ) : (
                 <Input
                   placeholder="مثال: ۳"
+                  inputMode="numeric"
                   value={tableNumber}
                   onChange={(e) => setTableNumber(e.target.value)}
                 />

@@ -23,6 +23,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, AlertTriangle, Package } from "@/lib/icons/app-icons";
+import { parseIntInput } from "@/lib/numerals";
+import {
+  formatPriceInput,
+  parsePriceInput,
+} from "@/lib/prices/format";
 
 interface InventoryItem {
   _id: string;
@@ -83,7 +88,7 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
       unit: item.unit,
       quantity: item.quantity.toString(),
       lowThreshold: item.lowThreshold.toString(),
-      cost: item.cost?.toString() ?? "",
+      cost: item.cost != null ? formatPriceInput(item.cost) : "",
     });
     setDialog(true);
   }
@@ -98,9 +103,9 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
       const payload = {
         name: form.name,
         unit: form.unit,
-        quantity: Number(form.quantity) || 0,
-        lowThreshold: Number(form.lowThreshold) || 5,
-        cost: form.cost ? Number(form.cost) : undefined,
+        quantity: parseIntInput(form.quantity) || 0,
+        lowThreshold: parseIntInput(form.lowThreshold) || 5,
+        cost: form.cost ? parsePriceInput(form.cost) : undefined,
       };
 
       if (editing) {
@@ -397,10 +402,14 @@ export default function CRMDashboard({ inventoryItems: initial, customers }: Pro
                   type="number"
                   value={form.cost}
                   onChange={(e) =>
-                    setForm((f) => ({ ...f, cost: e.target.value }))
+                    setForm((f) => ({
+                      ...f,
+                      cost: formatPriceInput(e.target.value),
+                    }))
                   }
                   placeholder="اختیاری"
                   dir="ltr"
+                  className="text-left tabular-nums"
                 />
               </div>
             </div>

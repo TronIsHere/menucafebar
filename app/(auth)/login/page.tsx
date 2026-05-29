@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/input-otp";
 import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
 import { AppLogo } from "@/components/brand/AppLogo";
+import { formatPhone } from "@/lib/customer-club/phone";
 
 type Step = "phone" | "otp";
 
@@ -33,16 +34,6 @@ function LoginForm() {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-
-  function formatPhone(value: string) {
-    // Keep only digits and leading +
-    const cleaned = value.replace(/[^\d+]/g, "");
-    // Auto-prepend +98 for Iranian numbers starting with 0
-    if (cleaned.startsWith("0") && cleaned.length > 1) {
-      return "+98" + cleaned.slice(1);
-    }
-    return cleaned;
-  }
 
   async function handleSendOtp(e: React.FormEvent) {
     e.preventDefault();
