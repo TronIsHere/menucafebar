@@ -8,6 +8,11 @@ export function toLatinDigits(value: string): string {
     .replace(/[٠-٩]/g, (d) => String(ARABIC_DIGITS.indexOf(d)));
 }
 
+/** Convert ASCII (0-9) digits to Persian numerals for display. */
+export function toPersianDigits(value: string | number): string {
+  return String(value).replace(/[0-9]/g, (d) => PERSIAN_DIGITS[Number(d)]);
+}
+
 /** Digits only (ASCII), after normalizing Persian/Arabic numerals. */
 export function parseDigits(value: string): string {
   return toLatinDigits(value).replace(/\D/g, "");

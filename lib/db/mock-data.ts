@@ -45,6 +45,8 @@ export const demoCafe = {
   phone: "02188776655",
   openTime: "08:00",
   closeTime: "23:00",
+  fridayOpenTime: "10:00",
+  fridayCloseTime: "23:00",
   isOnboardingComplete: true,
 };
 

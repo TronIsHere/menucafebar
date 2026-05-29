@@ -5,8 +5,31 @@ export interface Cafe {
   city: string;
   openTime: string;
   closeTime: string;
+  fridayOpenTime?: string;
+  fridayCloseTime?: string;
   slug: string;
   tableNumbers?: string[];
+}
+
+/**
+ * Working hours for the current day in Tehran. Friday often has different
+ * hours than Saturday–Thursday, so we surface the right range to visitors.
+ */
+export function cafeHoursToday(cafe: Cafe): { open: string; close: string } {
+  const weekday = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Tehran",
+    weekday: "long",
+  }).format(new Date());
+
+  if (weekday === "Friday" && cafe.fridayOpenTime && cafe.fridayCloseTime) {
+    return { open: cafe.fridayOpenTime, close: cafe.fridayCloseTime };
+  }
+  return { open: cafe.openTime, close: cafe.closeTime };
+}
+
+export function cafeHoursLabel(cafe: Cafe, separator = "–"): string {
+  const { open, close } = cafeHoursToday(cafe);
+  return `${open}${separator}${close}`;
 }
 
 export interface Category {

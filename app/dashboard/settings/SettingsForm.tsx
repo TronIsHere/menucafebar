@@ -1,12 +1,13 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TimeField } from "@/components/ui/time-field";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { getMenuPublicUrl } from "@/lib/utils";
@@ -26,6 +27,14 @@ const schema = z.object({
     z.string().regex(/^\d{2}:\d{2}$/)
   ),
   closeTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/)
+  ),
+  fridayOpenTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/)
+  ),
+  fridayCloseTime: z.preprocess(
     (val) => (typeof val === "string" ? toLatinDigits(val) : val),
     z.string().regex(/^\d{2}:\d{2}$/)
   ),
@@ -53,6 +62,8 @@ interface Props {
     phone: string;
     openTime: string;
     closeTime: string;
+    fridayOpenTime?: string;
+    fridayCloseTime?: string;
     slug: string;
     tableNumbers?: string[];
     customerClubDiscountEnabled?: boolean;
@@ -63,6 +74,7 @@ interface Props {
 export default function SettingsForm({ cafe }: Props) {
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
@@ -75,6 +87,8 @@ export default function SettingsForm({ cafe }: Props) {
       phone: cafe.phone,
       openTime: cafe.openTime,
       closeTime: cafe.closeTime,
+      fridayOpenTime: cafe.fridayOpenTime ?? cafe.openTime,
+      fridayCloseTime: cafe.fridayCloseTime ?? cafe.closeTime,
       tableCount: getTableCount(cafe.tableNumbers ?? []),
       customerClubDiscountEnabled: cafe.customerClubDiscountEnabled ?? false,
       newCustomerDiscountPercent: cafe.newCustomerDiscountPercent ?? 10,
@@ -95,6 +109,8 @@ export default function SettingsForm({ cafe }: Props) {
         phone: data.phone,
         openTime: data.openTime,
         closeTime: data.closeTime,
+        fridayOpenTime: data.fridayOpenTime,
+        fridayCloseTime: data.fridayCloseTime,
         tableNumbers,
         customerClubDiscountEnabled: data.customerClubDiscountEnabled,
         newCustomerDiscountPercent: data.newCustomerDiscountPercent,
@@ -157,15 +173,55 @@ export default function SettingsForm({ cafe }: Props) {
         <CardHeader>
           <CardTitle>ساعات کاری</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>ساعت باز شدن</Label>
-              <Input type="time" {...register("openTime")} dir="ltr" />
+        <CardContent className="space-y-6">
+          <div className="space-y-3">
+            <p className="text-sm font-medium">شنبه تا پنجشنبه</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>ساعت باز شدن</Label>
+                <Controller
+                  control={control}
+                  name="openTime"
+                  render={({ field }) => (
+                    <TimeField value={field.value as string} onChange={field.onChange} onBlur={field.onBlur} />
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>ساعت بسته شدن</Label>
+                <Controller
+                  control={control}
+                  name="closeTime"
+                  render={({ field }) => (
+                    <TimeField value={field.value as string} onChange={field.onChange} onBlur={field.onBlur} />
+                  )}
+                />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label>ساعت بسته شدن</Label>
-              <Input type="time" {...register("closeTime")} dir="ltr" />
+          </div>
+          <div className="space-y-3 border-t pt-4">
+            <p className="text-sm font-medium">جمعه</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>ساعت باز شدن</Label>
+                <Controller
+                  control={control}
+                  name="fridayOpenTime"
+                  render={({ field }) => (
+                    <TimeField value={field.value as string} onChange={field.onChange} onBlur={field.onBlur} />
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>ساعت بسته شدن</Label>
+                <Controller
+                  control={control}
+                  name="fridayCloseTime"
+                  render={({ field }) => (
+                    <TimeField value={field.value as string} onChange={field.onChange} onBlur={field.onBlur} />
+                  )}
+                />
+              </div>
             </div>
           </div>
         </CardContent>

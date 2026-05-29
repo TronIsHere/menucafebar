@@ -8,7 +8,7 @@ import MenuItemImage from "@/components/menu/MenuItemImage";
 import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import { Minus, Plus, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
-import { fmt } from "./types";
+import { cafeHoursLabel, fmt } from "./types";
 
 export default function BentoTemplate({ cafe, categories, items, template }: TemplateProps) {
   const router = useRouter();
@@ -123,7 +123,7 @@ export default function BentoTemplate({ cafe, categories, items, template }: Tem
             backgroundColor: accentColor, borderRadius: 12, padding: "8px 12px",
             fontSize: 10, fontWeight: 700, color: primaryColor,
           }}>
-            {cafe.openTime}–{cafe.closeTime}
+            {cafeHoursLabel(cafe)}
           </div>
         </div>
       </header>

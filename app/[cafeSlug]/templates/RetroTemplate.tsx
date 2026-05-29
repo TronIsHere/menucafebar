@@ -7,7 +7,7 @@ import TableCartLabel from "@/components/menu/TableCartLabel";
 import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
-import { fmt } from "./types";
+import { cafeHoursLabel, fmt } from "./types";
 
 export default function RetroTemplate({ cafe, categories, items, template }: TemplateProps) {
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function RetroTemplate({ cafe, categories, items, template }: Tem
           {cafe.name}
         </h1>
         <p style={{ fontSize: 12, color: muted, margin: "10px 0 0", fontStyle: "italic" }}>
-          {cafe.openTime} – {cafe.closeTime}
+          {cafeHoursLabel(cafe, " – ")}
         </p>
         <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 8, fontSize: 11, color: muted }}>
           <span style={{ display: "flex", alignItems: "center", gap: 4 }}>

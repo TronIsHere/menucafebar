@@ -8,7 +8,7 @@ import MenuItemImage from "@/components/menu/MenuItemImage";
 import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import { Minus, Plus, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
-import { fmt } from "./types";
+import { cafeHoursLabel, fmt } from "./types";
 
 export default function TilesTemplate({ cafe, categories, items, template }: TemplateProps) {
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function TilesTemplate({ cafe, categories, items, template }: Tem
           <h1 style={{ fontSize: 20, fontWeight: 900, margin: 0 }}>{cafe.name}</h1>
           <span style={{ fontSize: 11, opacity: 0.65, display: "flex", alignItems: "center", gap: 4 }}>
             <Clock style={{ width: 11, height: 11 }} />
-            {cafe.openTime}–{cafe.closeTime}
+            {cafeHoursLabel(cafe)}
           </span>
         </div>
       </header>

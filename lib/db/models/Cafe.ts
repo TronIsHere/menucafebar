@@ -10,6 +10,8 @@ export interface ICafe extends Document {
   logoUrl?: string;
   openTime: string;
   closeTime: string;
+  fridayOpenTime: string;
+  fridayCloseTime: string;
   ownerId: string;
   templateKey?: string;
   tableNumbers: string[];
@@ -32,6 +34,8 @@ const CafeSchema = new Schema<ICafe>(
     logoUrl: { type: String },
     openTime: { type: String, required: true, default: "08:00" },
     closeTime: { type: String, required: true, default: "22:00" },
+    fridayOpenTime: { type: String, required: true, default: "08:00" },
+    fridayCloseTime: { type: String, required: true, default: "22:00" },
     ownerId: { type: String, required: true, index: true },
     templateKey: { type: String },
     tableNumbers: { type: [String], default: [] },

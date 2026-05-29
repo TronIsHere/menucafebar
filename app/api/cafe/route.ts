@@ -12,6 +12,8 @@ const cafeSchema = z.object({
   phone: z.string().min(10, "شماره تلفن معتبر وارد کنید"),
   openTime: z.string().regex(/^\d{2}:\d{2}$/, "فرمت ساعت اشتباه است"),
   closeTime: z.string().regex(/^\d{2}:\d{2}$/, "فرمت ساعت اشتباه است"),
+  fridayOpenTime: z.string().regex(/^\d{2}:\d{2}$/, "فرمت ساعت اشتباه است").optional(),
+  fridayCloseTime: z.string().regex(/^\d{2}:\d{2}$/, "فرمت ساعت اشتباه است").optional(),
   slug: z.string().min(3).regex(/^[a-z0-9-]+$/, "فقط حروف انگلیسی کوچک، اعداد و خط تیره").optional(),
   tableNumbers: z.array(z.string().min(1)).optional(),
   customerClubDiscountEnabled: z.boolean().optional(),

@@ -8,7 +8,7 @@ import MenuItemImage from "@/components/menu/MenuItemImage";
 import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import { Minus, Plus, MapPin, Clock, UtensilsCrossed } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
-import { fmt } from "./types";
+import { cafeHoursLabel, fmt } from "./types";
 
 export default function ChocolateTemplate({ cafe, categories, items, template }: TemplateProps) {
   const router = useRouter();
@@ -57,7 +57,7 @@ export default function ChocolateTemplate({ cafe, categories, items, template }:
             <MapPin style={{ width: 10, height: 10 }} />{cafe.address}
           </span>
           <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <Clock style={{ width: 10, height: 10 }} />{cafe.openTime}–{cafe.closeTime}
+            <Clock style={{ width: 10, height: 10 }} />{cafeHoursLabel(cafe)}
           </span>
         </div>
       </header>

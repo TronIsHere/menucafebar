@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TimeField } from "@/components/ui/time-field";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { parseDigits, toLatinDigits } from "@/lib/numerals";
@@ -26,6 +27,14 @@ const schema = z.object({
     z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه")
   ),
   closeTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه")
+  ),
+  fridayOpenTime: z.preprocess(
+    (val) => (typeof val === "string" ? toLatinDigits(val) : val),
+    z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه")
+  ),
+  fridayCloseTime: z.preprocess(
     (val) => (typeof val === "string" ? toLatinDigits(val) : val),
     z.string().regex(/^\d{2}:\d{2}$/, "فرمت اشتباه")
   ),
@@ -59,6 +68,7 @@ export default function OnboardingWizard() {
 
   const {
     register,
+    control,
     handleSubmit,
     watch,
     setValue,
@@ -69,6 +79,8 @@ export default function OnboardingWizard() {
     defaultValues: {
       openTime: "08:00",
       closeTime: "22:00",
+      fridayOpenTime: "08:00",
+      fridayCloseTime: "22:00",
     },
   });
 
@@ -78,7 +90,13 @@ export default function OnboardingWizard() {
     let valid = false;
     if (step === 0) valid = await trigger(["name", "slug"]);
     if (step === 1) valid = await trigger(["address", "city", "phone"]);
-    if (step === 2) valid = await trigger(["openTime", "closeTime"]);
+    if (step === 2)
+      valid = await trigger([
+        "openTime",
+        "closeTime",
+        "fridayOpenTime",
+        "fridayCloseTime",
+      ]);
     if (valid) setStep((s) => s + 1);
   }
 
@@ -204,30 +222,86 @@ export default function OnboardingWizard() {
 
               {step === 2 && (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="openTime">ساعت باز شدن *</Label>
-                      <Input
-                        id="openTime"
-                        type="time"
-                        dir="ltr"
-                        {...register("openTime")}
-                      />
-                      {errors.openTime && (
-                        <p className="text-destructive text-xs">{errors.openTime.message}</p>
-                      )}
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">شنبه تا پنجشنبه</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="openTime">ساعت باز شدن *</Label>
+                        <Controller
+                          control={control}
+                          name="openTime"
+                          render={({ field }) => (
+                            <TimeField
+                              id="openTime"
+                              value={field.value as string}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                            />
+                          )}
+                        />
+                        {errors.openTime && (
+                          <p className="text-destructive text-xs">{errors.openTime.message}</p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="closeTime">ساعت بسته شدن *</Label>
+                        <Controller
+                          control={control}
+                          name="closeTime"
+                          render={({ field }) => (
+                            <TimeField
+                              id="closeTime"
+                              value={field.value as string}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                            />
+                          )}
+                        />
+                        {errors.closeTime && (
+                          <p className="text-destructive text-xs">{errors.closeTime.message}</p>
+                        )}
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="closeTime">ساعت بسته شدن *</Label>
-                      <Input
-                        id="closeTime"
-                        type="time"
-                        dir="ltr"
-                        {...register("closeTime")}
-                      />
-                      {errors.closeTime && (
-                        <p className="text-destructive text-xs">{errors.closeTime.message}</p>
-                      )}
+                  </div>
+                  <div className="space-y-3 border-t pt-4">
+                    <p className="text-sm font-medium">جمعه</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="fridayOpenTime">ساعت باز شدن *</Label>
+                        <Controller
+                          control={control}
+                          name="fridayOpenTime"
+                          render={({ field }) => (
+                            <TimeField
+                              id="fridayOpenTime"
+                              value={field.value as string}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                            />
+                          )}
+                        />
+                        {errors.fridayOpenTime && (
+                          <p className="text-destructive text-xs">{errors.fridayOpenTime.message}</p>
+                        )}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="fridayCloseTime">ساعت بسته شدن *</Label>
+                        <Controller
+                          control={control}
+                          name="fridayCloseTime"
+                          render={({ field }) => (
+                            <TimeField
+                              id="fridayCloseTime"
+                              value={field.value as string}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                            />
+                          )}
+                        />
+                        {errors.fridayCloseTime && (
+                          <p className="text-destructive text-xs">{errors.fridayCloseTime.message}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                   {cafeName && (

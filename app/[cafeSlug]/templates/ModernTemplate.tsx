@@ -8,7 +8,7 @@ import MenuItemImage from "@/components/menu/MenuItemImage";
 import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import { Minus, Plus, Search, ShoppingBag, UtensilsCrossed } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
-import { fmt } from "./types";
+import { cafeHoursLabel, fmt } from "./types";
 
 export default function ModernTemplate({ cafe, categories, items, template }: TemplateProps) {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function ModernTemplate({ cafe, categories, items, template }: Te
       }}>
         <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <h1 style={{ fontSize: 17, fontWeight: 800, margin: 0 }}>{cafe.name}</h1>
-          <span style={{ fontSize: 11, opacity: 0.65 }}>{cafe.openTime}–{cafe.closeTime}</span>
+          <span style={{ fontSize: 11, opacity: 0.65 }}>{cafeHoursLabel(cafe)}</span>
         </div>
       </header>
 

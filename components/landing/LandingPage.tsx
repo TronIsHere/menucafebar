@@ -560,7 +560,7 @@ export default function LandingPage() {
         </div>
 
         {mobileOpen && (
-          <div className="md:hidden bg-background border-t border-border px-4 py-4 flex flex-col gap-1">
+          <div className="lp-mobile-nav md:hidden bg-background border-t border-border px-4 py-4 flex flex-col gap-1">
             {[...navLinks, { label: "ورود", href: "/login" }].map((item) => (
               <a
                 key={item.label}

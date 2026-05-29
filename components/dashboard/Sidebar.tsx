@@ -140,7 +140,10 @@ export function MobileDashboardHeader({ cafeName }: { cafeName?: string }) {
             <Menu className="w-5 h-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-72 p-0 flex flex-col">
+        <SheetContent
+          side="left"
+          className="w-72 p-0 flex flex-col data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right"
+        >
           <SheetTitle className="sr-only">منوی ناوبری</SheetTitle>
           <SidebarContent cafeName={cafeName} onNavigate={() => setOpen(false)} />
         </SheetContent>

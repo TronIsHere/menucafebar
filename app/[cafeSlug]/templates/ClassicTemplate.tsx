@@ -8,7 +8,7 @@ import MenuItemImage from "@/components/menu/MenuItemImage";
 import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import { Minus, Plus, MapPin, Clock, UtensilsCrossed, ShoppingBag } from "@/lib/icons/app-icons";
 import type { TemplateProps } from "./types";
-import { fmt } from "./types";
+import { cafeHoursLabel, fmt } from "./types";
 
 export default function ClassicTemplate({ cafe, categories, items, template }: TemplateProps) {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function ClassicTemplate({ cafe, categories, items, template }: T
             <MapPin style={{ width: 11, height: 11 }} />{cafe.address}
           </span>
           <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
-            <Clock style={{ width: 11, height: 11 }} />{cafe.openTime}–{cafe.closeTime}
+            <Clock style={{ width: 11, height: 11 }} />{cafeHoursLabel(cafe)}
           </span>
         </div>
       </header>
