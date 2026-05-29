@@ -11,9 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Plus,
@@ -24,7 +27,10 @@ import {
   UtensilsCrossed,
   QrCode,
   X,
+  Upload,
+  Image,
 } from "@/lib/icons/app-icons";
+import { cn } from "@/lib/utils";
 import IconPicker from "@/components/icons/IconPicker";
 import { CategoryIcon } from "@/components/icons/CategoryIcon";
 import MenuQrCode from "@/components/dashboard/MenuQrCode";
@@ -272,6 +278,19 @@ export default function MenuBuilder({
 
     const file = event.dataTransfer.files?.[0];
     if (file) void handleImageUpload(file);
+  }
+
+  function openImagePicker() {
+    if (!uploadingImage) imageInputRef.current?.click();
+  }
+
+  function handleItemDialogChange(open: boolean) {
+    if (!open && uploadingImage) return;
+    setItemDialog(open);
+    if (!open) {
+      setIsImageDragging(false);
+      setImageUploadName("");
+    }
   }
 
   async function saveItem() {
@@ -879,80 +898,145 @@ export default function MenuBuilder({
       </Dialog>
 
       {/* Item Dialog */}
-      <Dialog open={itemDialog} onOpenChange={setItemDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
+      <Dialog open={itemDialog} onOpenChange={handleItemDialogChange}>
+        <DialogContent className="flex max-h-[min(90vh,720px)] max-w-lg flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
+          <DialogHeader className="space-y-1.5 border-b px-6 py-5 text-start">
             <DialogTitle>
               {editingItem ? "ویرایش آیتم" : "آیتم جدید"}
             </DialogTitle>
+            <DialogDescription>
+              {editingItem
+                ? "جزئیات آیتم منو را ویرایش کنید. تغییرات پس از ذخیره در منوی عمومی نمایش داده می‌شود."
+                : "یک آیتم جدید به دسته‌بندی فعال اضافه کنید. فیلدهای ستاره‌دار الزامی هستند."}
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>نام آیتم *</Label>
+
+          <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="item-name">نام آیتم *</Label>
+                <Input
+                  id="item-name"
+                  value={itemForm.name}
+                  onChange={(e) => setItemForm((f) => ({ ...f, name: e.target.value }))}
+                  placeholder="مثال: اسپرسو دوبل"
+                  autoFocus
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="item-description">توضیحات</Label>
+                <Textarea
+                  id="item-description"
+                  value={itemForm.description}
+                  onChange={(e) =>
+                    setItemForm((f) => ({ ...f, description: e.target.value }))
+                  }
+                  placeholder="مواد، اندازه یا نکته‌ای که مشتری باید بداند..."
+                  rows={2}
+                  className="resize-none"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="item-price">قیمت (تومان) *</Label>
+                <Input
+                  id="item-price"
+                  type="text"
+                  inputMode="numeric"
+                  value={itemForm.price}
+                  onChange={(e) =>
+                    setItemForm((f) => ({
+                      ...f,
+                      price: formatPriceInput(e.target.value),
+                    }))
+                  }
+                  placeholder="۵۰٬۰۰۰"
+                  dir="ltr"
+                  className="text-left tabular-nums"
+                />
+              </div>
+              <label
+                htmlFor="available"
+                className="flex cursor-pointer items-start gap-3 rounded-lg border bg-muted/30 p-3 transition-colors hover:bg-muted/50 sm:items-center"
+              >
+                <input
+                  type="checkbox"
+                  id="available"
+                  checked={itemForm.available}
+                  onChange={(e) =>
+                    setItemForm((f) => ({ ...f, available: e.target.checked }))
+                  }
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-input accent-primary sm:mt-0"
+                />
+                <span className="space-y-0.5">
+                  <span className="block text-sm font-medium">موجود برای سفارش</span>
+                  <span className="block text-xs text-muted-foreground">
+                    {itemForm.available
+                      ? "مشتری می‌تواند این آیتم را سفارش دهد."
+                      : "آیتم در منو نمایش داده می‌شود اما غیرفعال است."}
+                  </span>
+                </span>
+              </label>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between gap-2">
+                <Label className="text-sm font-medium">تصویر آیتم</Label>
+                <span className="text-xs text-muted-foreground">اختیاری</span>
+              </div>
+
               <Input
-                value={itemForm.name}
-                onChange={(e) => setItemForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="مثال: اسپرسو دوبل"
-                autoFocus
+                ref={imageInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                disabled={uploadingImage}
+                className="sr-only"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void handleImageUpload(file);
+                  e.target.value = "";
+                }}
               />
-            </div>
-            <div className="space-y-2">
-              <Label>توضیحات</Label>
-              <Textarea
-                value={itemForm.description}
-                onChange={(e) =>
-                  setItemForm((f) => ({ ...f, description: e.target.value }))
-                }
-                placeholder="توضیح مختصر درباره این آیتم..."
-                rows={2}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>قیمت (تومان) *</Label>
-              <Input
-                type="text"
-                inputMode="numeric"
-                value={itemForm.price}
-                onChange={(e) =>
-                  setItemForm((f) => ({
-                    ...f,
-                    price: formatPriceInput(e.target.value),
-                  }))
-                }
-                placeholder="۵۰٬۰۰۰"
-                dir="ltr"
-                className="text-left tabular-nums"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>تصویر آیتم</Label>
+
               <div
+                role="button"
+                tabIndex={uploadingImage ? -1 : 0}
+                aria-label="انتخاب یا رها کردن تصویر آیتم"
+                aria-disabled={uploadingImage}
+                onClick={openImagePicker}
+                onKeyDown={(e) => {
+                  if (uploadingImage) return;
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openImagePicker();
+                  }
+                }}
                 onDragOver={(event) => {
                   event.preventDefault();
                   if (!uploadingImage) setIsImageDragging(true);
                 }}
                 onDragLeave={() => setIsImageDragging(false)}
                 onDrop={handleImageDrop}
-                className={`rounded-xl border-2 border-dashed p-3 transition-colors ${
+                className={cn(
+                  "rounded-xl border-2 border-dashed p-4 outline-none transition-all",
+                  "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  uploadingImage
+                    ? "cursor-wait border-border bg-muted/20"
+                    : "cursor-pointer hover:border-primary/50 hover:bg-muted/40",
                   isImageDragging
-                    ? "border-primary bg-primary/5"
-                    : "border-border bg-muted/30"
-                }`}
+                    ? "scale-[1.01] border-primary bg-primary/5 ring-2 ring-primary/20"
+                    : "border-border bg-muted/20"
+                )}
               >
-                <Input
-                  ref={imageInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
-                  disabled={uploadingImage}
-                  className="sr-only"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) void handleImageUpload(file);
-                    e.target.value = "";
-                  }}
-                />
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <div className="relative h-32 w-full overflow-hidden rounded-lg border border-border bg-background sm:h-28 sm:w-32 sm:shrink-0">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
+                  <div
+                    className={cn(
+                      "relative mx-auto aspect-square w-full max-w-[140px] overflow-hidden rounded-lg border bg-background shadow-sm sm:mx-0 sm:h-28 sm:w-28 sm:max-w-none sm:shrink-0",
+                      !itemForm.imageUrl && "border-dashed"
+                    )}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {itemForm.imageUrl ? (
                       <>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -964,7 +1048,7 @@ export default function MenuBuilder({
                         <button
                           type="button"
                           onClick={() => setItemForm((f) => ({ ...f, imageUrl: "" }))}
-                          className="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm hover:bg-background"
+                          className="absolute inset-s-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-background/95 text-foreground shadow-md ring-1 ring-border transition-colors hover:bg-background"
                           aria-label="حذف تصویر"
                           disabled={uploadingImage}
                         >
@@ -973,38 +1057,77 @@ export default function MenuBuilder({
                       </>
                     ) : (
                       <div className="flex h-full w-full flex-col items-center justify-center gap-2 px-3 text-center text-muted-foreground">
-                        <UtensilsCrossed className="h-8 w-8 opacity-50" />
-                        <span className="block text-xs leading-5">
-                          هنوز تصویری انتخاب نشده
-                        </span>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                          <Image className="h-5 w-5 opacity-70" />
+                        </div>
+                        <span className="text-xs leading-5">بدون تصویر</span>
                       </div>
                     )}
                     {uploadingImage && (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/80 text-sm font-medium text-foreground backdrop-blur-sm">
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/85 backdrop-blur-[2px]">
                         <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                        <span>در حال آپلود</span>
+                        <span className="text-xs font-medium">در حال آپلود</span>
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 space-y-3">
-                    <div className="space-y-1">
+
+                  <div className="flex min-w-0 flex-1 flex-col justify-center gap-3 text-center sm:text-start">
+                    <div className="flex flex-col items-center gap-2 sm:items-start">
+                      <div
+                        className={cn(
+                          "flex h-10 w-10 items-center justify-center rounded-full",
+                          isImageDragging ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+                        )}
+                      >
+                        <Upload className="h-5 w-5" />
+                      </div>
                       <p className="text-sm font-medium">
-                        تصویر غذا یا نوشیدنی را اینجا بکشید
+                        {isImageDragging
+                          ? "رها کنید تا آپلود شود"
+                          : itemForm.imageUrl
+                            ? "برای تعویض تصویر کلیک یا فایل را بکشید"
+                            : "کلیک کنید یا تصویر را اینجا بکشید"}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        یا از دکمه انتخاب تصویر استفاده کنید. JPG، PNG، WebP یا GIF تا
-                        ۵ مگابایت پذیرفته می‌شود.
+                        JPG، PNG، WebP یا GIF — حداکثر ۵ مگابایت
                       </p>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+
+                    {uploadingImage && (
+                      <div className="space-y-1.5">
+                        <div
+                          className="h-1.5 w-full overflow-hidden rounded-full bg-secondary"
+                          role="progressbar"
+                          aria-valuetext="در حال آپلود"
+                        >
+                          <div className="h-full w-2/5 animate-pulse rounded-full bg-primary" />
+                        </div>
+                        <p className="truncate text-xs text-muted-foreground">
+                          {imageUploadName || "تصویر"} در حال آپلود...
+                        </p>
+                      </div>
+                    )}
+
+                    {!uploadingImage && itemForm.imageUrl && (
+                      <p className="text-xs text-primary">
+                        تصویر آماده است و همراه آیتم ذخیره می‌شود.
+                      </p>
+                    )}
+
+                    <div
+                      className="flex flex-wrap justify-center gap-2 sm:justify-start"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => imageInputRef.current?.click()}
+                        className="gap-1.5"
+                        onClick={openImagePicker}
                         disabled={uploadingImage}
                       >
-                        {itemForm.imageUrl ? "تغییر تصویر" : "انتخاب تصویر"}
+                        <Upload className="h-3.5 w-3.5" />
+                        {itemForm.imageUrl ? "تغییر تصویر" : "انتخاب فایل"}
                       </Button>
                       {itemForm.imageUrl && (
                         <Button
@@ -1014,51 +1137,35 @@ export default function MenuBuilder({
                           onClick={() => setItemForm((f) => ({ ...f, imageUrl: "" }))}
                           disabled={uploadingImage}
                         >
-                          حذف تصویر
+                          حذف
                         </Button>
                       )}
                     </div>
-                    <p className="min-h-4 text-xs text-muted-foreground">
-                      {uploadingImage
-                        ? `${imageUploadName || "تصویر"} در حال آپلود است...`
-                        : itemForm.imageUrl
-                          ? "تصویر آماده است و همراه آیتم ذخیره می‌شود."
-                          : "تصویر اختیاری است، اما به جذاب‌تر شدن منو کمک می‌کند."}
-                    </p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                id="available"
-                checked={itemForm.available}
-                onChange={(e) =>
-                  setItemForm((f) => ({ ...f, available: e.target.checked }))
-                }
-              />
-              <Label htmlFor="available" className="cursor-pointer">
-                موجود است
-              </Label>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setItemDialog(false)}
-              >
-                لغو
-              </Button>
-              <Button
-                className="flex-1"
-                onClick={saveItem}
-                disabled={loading || uploadingImage}
-              >
-                {loading ? "در حال ذخیره..." : "ذخیره"}
-              </Button>
-            </div>
           </div>
+
+          <DialogFooter className="gap-2 border-t bg-muted/20 px-6 py-4 sm:gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full sm:w-auto"
+              onClick={() => handleItemDialogChange(false)}
+              disabled={loading || uploadingImage}
+            >
+              لغو
+            </Button>
+            <Button
+              type="button"
+              className="w-full sm:w-auto sm:min-w-28"
+              onClick={saveItem}
+              disabled={loading || uploadingImage || !itemForm.name.trim()}
+            >
+              {loading ? "در حال ذخیره..." : uploadingImage ? "منتظر آپلود..." : "ذخیره"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

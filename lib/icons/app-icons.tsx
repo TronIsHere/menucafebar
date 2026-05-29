@@ -72,6 +72,8 @@ export {
   LuScanLine as ScanLine,
   LuNotebookPen as NotebookPen,
   LuImageOff as ImageOff,
+  LuImage as Image,
+  LuUpload as Upload,
   LuZap as Zap,
   LuUsers as Users,
   LuSmartphone as Smartphone,
