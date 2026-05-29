@@ -15,7 +15,6 @@ import {
   Menu,
   X,
   TrendingUp,
-  Shield,
   Clock,
   LayoutDashboard,
   ShoppingBag,
@@ -30,7 +29,6 @@ import {
   Plus,
   ChevronDown,
   BadgeCheck,
-  CreditCard,
   Lock,
   Ban,
   ScanLine,
@@ -57,6 +55,7 @@ import {
   AnimatedCounter,
   RotatingWords,
 } from "@/components/landing/landing-motion";
+import { StickyCtaBar } from "@/components/landing/StickyCtaBar";
 
 const navLinks = [
   { label: "امکانات", href: "#features" },
@@ -224,51 +223,6 @@ const stats: Stat[] = [
   { static: "۲۴/۷", label: "پشتیبانی", color: "text-purple-500", bg: "bg-purple-50", icon: Clock },
 ];
 
-const whyItems = [
-  {
-    icon: Zap,
-    title: "راه‌اندازی سریع",
-    desc: "در کمتر از ۱۰ دقیقه کافه‌ات را راه‌اندازی کن. بدون نیاز به دانش فنی.",
-    color: "text-orange-500",
-    bg: "bg-orange-50",
-  },
-  {
-    icon: Shield,
-    title: "امنیت بالا",
-    desc: "اطلاعات کافه و مشتریانت با بالاترین استانداردهای امنیتی محافظت می‌شود.",
-    color: "text-blue-500",
-    bg: "bg-blue-50",
-  },
-  {
-    icon: TrendingUp,
-    title: "رشد درآمد",
-    desc: `کافه‌هایی که از ${APP_NAME} استفاده می‌کنند به طور میانگین ۲۵٪ افزایش درآمد دارند.`,
-    color: "text-green-500",
-    bg: "bg-green-50",
-  },
-  {
-    icon: Clock,
-    title: "صرفه‌جویی در زمان",
-    desc: "تا ۳ ساعت در روز در مدیریت دستی سفارشات و موجودی صرفه‌جویی کن.",
-    color: "text-purple-500",
-    bg: "bg-purple-50",
-  },
-  {
-    icon: Smartphone,
-    title: "سازگار با موبایل",
-    desc: "روی هر دستگاهی کار می‌کند. گوشی، تبلت و لپ‌تاپ، بدون نصب اپلیکیشن.",
-    color: "text-rose-500",
-    bg: "bg-rose-50",
-  },
-  {
-    icon: Users,
-    title: "پشتیبانی فارسی",
-    desc: "تیم پشتیبانی ما ۲۴/۷ آماده پاسخگویی به سوالات شما به زبان فارسی است.",
-    color: "text-amber-600",
-    bg: "bg-amber-50",
-  },
-];
-
 const mockOrders = [
   { table: "میز ۵", items: "اسپرسو دوبل، کیک شکلاتی", status: "در حال آماده‌سازی", variant: "secondary" as const, num: "۵" },
   { table: "میز ۲", items: "کاپوچینو، ماکارون", status: "تکمیل شده", variant: "outline" as const, num: "۲" },
@@ -350,7 +304,7 @@ const customerSteps = [
 
 const trustBadges = [
   { icon: BadgeCheck, title: "۱۴ روز ضمانت", desc: "بازگشت کامل وجه", color: "text-green-600", bg: "bg-green-50" },
-  { icon: CreditCard, title: "بدون کارت بانکی", desc: "برای شروع لازم نیست", color: "text-blue-600", bg: "bg-blue-50" },
+  { icon: Smartphone, title: "ثبت‌نام با موبایل", desc: "فقط شماره موبایل کافی است", color: "text-blue-600", bg: "bg-blue-50" },
   { icon: Ban, title: "لغو در هر زمان", desc: "بدون تعهد و قرارداد", color: "text-amber-600", bg: "bg-amber-50" },
   { icon: Lock, title: "امنیت اطلاعات", desc: "رمزگذاری کامل داده‌ها", color: "text-purple-600", bg: "bg-purple-50" },
 ];
@@ -358,7 +312,7 @@ const trustBadges = [
 const faqs = [
   {
     q: "آیا واقعاً رایگان است؟",
-    a: "بله. پلن رایگان همیشه رایگان است و برای شروع به هیچ کارت بانکی‌ای نیاز ندارید. هر زمان خواستید می‌توانید به پلن حرفه‌ای ارتقا دهید.",
+    a: "بله. پلن رایگان همیشه رایگان است و برای شروع فقط شماره موبایل لازم است. هر زمان خواستید می‌توانید به پلن حرفه‌ای ارتقا دهید.",
   },
   {
     q: "برای راه‌اندازی به سخت‌افزار خاصی نیاز دارم؟",
@@ -431,7 +385,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-3 p-4 text-right"
+        className="flex w-full cursor-pointer items-center justify-between gap-3 p-4 text-right"
       >
         <span className="text-sm font-semibold">{q}</span>
         <ChevronDown
@@ -482,15 +436,20 @@ function SectionBadge({ children }: { children: React.ReactNode }) {
 export default function LandingPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showStickyCta, setShowStickyCta] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 16);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 16);
+      setShowStickyCta(window.scrollY > 520);
+    };
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div className="min-h-screen bg-muted/20 text-foreground overflow-x-hidden">
+    <div className="min-h-screen bg-muted/20 text-foreground overflow-x-hidden pb-20">
       {/* Animated aurora backdrop (warm coffee tones) */}
       <div className="fixed inset-0 -z-10 pointer-events-none select-none overflow-hidden" aria-hidden>
         <div
@@ -521,11 +480,16 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav
         className={cn(
-          "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-          scrolled && "bg-background/80 backdrop-blur-md border-b border-border shadow-sm"
+          "fixed z-50 transition-all duration-300 px-4 sm:px-6",
+          scrolled ? "top-3 inset-x-0" : "top-0 inset-x-0"
         )}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div
+          className={cn(
+            "max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between transition-all duration-300",
+            scrolled && "rounded-2xl bg-background/90 backdrop-blur-lg border border-border shadow-lg"
+          )}
+        >
           <Logo size="sm" />
 
           <div className="hidden md:flex items-center gap-8">
@@ -533,7 +497,7 @@ export default function LandingPage() {
               <a
                 key={item.label}
                 href={item.href}
-                className="relative text-sm text-muted-foreground hover:text-foreground transition-colors after:absolute after:-bottom-1 after:right-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
+                className="cursor-pointer relative text-sm text-muted-foreground hover:text-foreground transition-colors after:absolute after:-bottom-1 after:right-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full"
               >
                 {item.label}
               </a>
@@ -560,12 +524,12 @@ export default function LandingPage() {
         </div>
 
         {mobileOpen && (
-          <div className="lp-mobile-nav md:hidden bg-background border-t border-border px-4 py-4 flex flex-col gap-1">
+          <div className="lp-mobile-nav md:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-background border border-border shadow-lg px-4 py-4 flex flex-col gap-1">
             {[...navLinks, { label: "ورود", href: "/login" }].map((item) => (
               <a
                 key={item.label}
                 href={item.href}
-                className="text-sm text-muted-foreground hover:text-foreground px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
+                className="cursor-pointer text-sm text-muted-foreground hover:text-foreground px-3 py-2.5 rounded-lg hover:bg-muted transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
@@ -633,7 +597,7 @@ export default function LandingPage() {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground animate-[lp-fade-up_0.7s_cubic-bezier(0.16,1,0.3,1)_0.3s_both]">
-              نیازی به کارت بانکی ندارید
+              راه‌اندازی در کمتر از ۱۰ دقیقه
             </p>
           </div>
 
@@ -843,12 +807,50 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <Reveal className="mt-10 text-center" delay={120}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-5 py-2.5 text-sm font-semibold text-primary">
-              <BadgeCheck className="h-4 w-4" />
-              با {APP_NAME} همه این‌ها حل می‌شود
-              <ArrowLeft className="h-4 w-4" />
-            </span>
+          <Reveal className="mt-10" delay={120}>
+            <div className="grid md:grid-cols-2 gap-4 mb-10">
+              <div className="rounded-2xl border border-dashed border-rose-200 bg-rose-50/50 p-6">
+                <p className="text-xs font-bold uppercase tracking-wide text-rose-600 mb-4">قبل</p>
+                <ul className="space-y-3 text-sm text-muted-foreground">
+                  {[
+                    "سفارش‌های دستی و اشتباه",
+                    "منوی کاغذی با هر تغییر قیمت",
+                    "بدون دید درآمد و پرفروش‌ها",
+                    "اتلاف وقت گارسون‌ها",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <X className="h-3.5 w-3.5 shrink-0 text-rose-500" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-2xl border border-green-200 bg-green-50/40 p-6 shadow-sm">
+                <p className="text-xs font-bold uppercase tracking-wide text-green-600 mb-4">
+                  بعد از {APP_NAME}
+                </p>
+                <ul className="space-y-3 text-sm">
+                  {[
+                    "ثبت دقیق سفارش از میز با QR",
+                    "منوی دیجیتال — تغییر فوری قیمت",
+                    "گزارش درآمد و آیتم‌های پرسود",
+                    "تا ۳ ساعت صرفه‌جویی در روز",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <Check className="h-3.5 w-3.5 shrink-0 text-green-600" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="text-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-5 py-2.5 text-sm font-semibold text-primary">
+                <BadgeCheck className="h-4 w-4" />
+                با {APP_NAME} همه این‌ها حل می‌شود
+                <ArrowLeft className="h-4 w-4" />
+              </span>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -918,7 +920,7 @@ export default function LandingPage() {
               ))}
             </ul>
 
-            <Button size="lg" className="lp-shine-wrap gap-2 transition-transform hover:scale-[1.03]" asChild>
+            <Button size="lg" className="lp-shine-wrap gap-2 cursor-pointer transition-colors duration-200" asChild>
               <Link href="/login">
                 منوی دیجیتال خودت را بساز
                 <ArrowLeft className="w-4 h-4" />
@@ -1032,73 +1034,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Why us */}
-      <section className="py-20 px-4 sm:px-6 bg-background/70 backdrop-blur-sm border-y border-border">
-        <div className="max-w-6xl mx-auto">
-          <Reveal className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">چرا {APP_NAME}؟</h2>
-            <p className="text-muted-foreground">مزایایی که کافه‌ات را یک قدم جلوتر می‌برد</p>
-          </Reveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {whyItems.map((item, i) => (
-              <Reveal key={item.title} delay={(i % 3) * 100}>
-                <div className="lp-lift flex gap-4 p-5 rounded-xl border bg-card h-full hover:shadow-md hover:border-primary/30">
-                  <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", item.bg)}>
-                    <item.icon className={cn("w-4 h-4", item.color)} />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="py-20 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <Reveal>
-            <SectionBadge>شروع کار</SectionBadge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">در ۳ قدم ساده راه‌اندازی کن</h2>
-            <p className="text-muted-foreground mb-12">نیازی به دانش فنی یا پشتیبان IT نیست.</p>
-          </Reveal>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
-            {steps.map((step, i) => (
-              <Reveal key={step.num} delay={i * 120}>
-                <Card className="lp-lift text-center h-full hover:shadow-lg">
-                  <CardContent className="pt-8 pb-6">
-                    <div className="relative w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4 text-xl font-bold shadow-lg shadow-primary/20">
-                      {step.num}
-                    </div>
-                    <h3 className="font-semibold mb-2">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
-                  </CardContent>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={100}>
-            <Button size="lg" className="lp-shine-wrap gap-2 transition-transform hover:scale-[1.03]" asChild>
-              <Link href="/login">
-                همین الان شروع کن
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
-            </Button>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Testimonials */}
+      {/* Testimonials — social proof before pricing */}
       <section id="testimonials" className="py-20 px-4 sm:px-6 bg-background/70 backdrop-blur-sm border-y border-border">
         <div className="max-w-6xl mx-auto">
           <Reveal className="text-center mb-12">
             <SectionBadge>نظر کاربران</SectionBadge>
-            <h2 className="text-3xl md:text-4xl font-bold">صاحبان کافه عاشقش شدند</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              نتیجه واقعی برای کافه‌های واقعی
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              میانگین ۲۵٪ رشد درآمد و صفر اشتباه سفارش — طبق بازخورد صاحبان کافه.
+            </p>
           </Reveal>
 
           <div className="grid md:grid-cols-3 gap-4">
@@ -1128,6 +1074,51 @@ export default function LandingPage() {
               </Reveal>
             ))}
           </div>
+
+          <Reveal className="mt-10 text-center" delay={100}>
+            <Button size="lg" className="lp-shine-wrap gap-2 cursor-pointer" asChild>
+              <Link href="/login">
+                مثل آن‌ها شروع کن — رایگان
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+            </Button>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="py-20 px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <Reveal>
+            <SectionBadge>شروع کار</SectionBadge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">در ۳ قدم ساده راه‌اندازی کن</h2>
+            <p className="text-muted-foreground mb-12">نیازی به دانش فنی یا پشتیبان IT نیست.</p>
+          </Reveal>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
+            {steps.map((step, i) => (
+              <Reveal key={step.num} delay={i * 120}>
+                <Card className="lp-lift text-center h-full hover:shadow-lg">
+                  <CardContent className="pt-8 pb-6">
+                    <div className="relative w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4 text-xl font-bold shadow-lg shadow-primary/20">
+                      {step.num}
+                    </div>
+                    <h3 className="font-semibold mb-2">{step.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                  </CardContent>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={100}>
+            <Button size="lg" className="lp-shine-wrap gap-2 cursor-pointer" asChild>
+              <Link href="/login">
+                همین الان شروع کن
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+            </Button>
+          </Reveal>
         </div>
       </section>
 
@@ -1138,6 +1129,26 @@ export default function LandingPage() {
             <SectionBadge>قیمت‌گذاری</SectionBadge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">شفاف، بدون هزینه پنهان</h2>
             <p className="text-muted-foreground">همه پلن‌ها با ۱۴ روز آزمایش رایگان شروع می‌شوند.</p>
+          </Reveal>
+
+          {/* Risk reversal before pricing cards */}
+          <Reveal className="mb-8" delay={60}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              {trustBadges.map((b) => (
+                <div
+                  key={b.title}
+                  className="flex items-center gap-3 rounded-xl border bg-card p-4"
+                >
+                  <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", b.bg)}>
+                    <b.icon className={cn("h-5 w-5", b.color)} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold leading-tight">{b.title}</p>
+                    <p className="text-xs text-muted-foreground">{b.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Reveal>
 
           <div className="grid md:grid-cols-3 gap-4 items-start">
@@ -1180,7 +1191,7 @@ export default function LandingPage() {
                       ))}
                     </ul>
                     <Button
-                      className={cn("w-full transition-transform hover:scale-[1.02]", plan.highlight && "lp-shine-wrap")}
+                      className={cn("w-full cursor-pointer transition-colors duration-200", plan.highlight && "lp-shine-wrap")}
                       variant={plan.highlight ? "default" : "outline"}
                       asChild
                     >
@@ -1191,26 +1202,6 @@ export default function LandingPage() {
               </Reveal>
             ))}
           </div>
-
-          {/* Risk reversal & trust badges */}
-          <Reveal className="mt-10" delay={80}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {trustBadges.map((b) => (
-                <div
-                  key={b.title}
-                  className="flex items-center gap-3 rounded-xl border bg-card p-4"
-                >
-                  <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", b.bg)}>
-                    <b.icon className={cn("h-5 w-5", b.color)} />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold leading-tight">{b.title}</p>
-                    <p className="text-xs text-muted-foreground">{b.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -1273,7 +1264,7 @@ export default function LandingPage() {
                     </Link>
                   </Button>
                   <p className="text-xs text-primary-foreground/50 mt-4">
-                    نیازی به کارت بانکی ندارید · بدون تعهد · هر لحظه لغو کنید
+                    بدون تعهد · هر لحظه لغو کنید · پشتیبانی فارسی ۲۴/۷
                   </p>
                 </div>
               </CardContent>
@@ -1325,6 +1316,8 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      <StickyCtaBar visible={showStickyCta} label="۱۴ روز رایگان — شروع کن" />
     </div>
   );
 }
