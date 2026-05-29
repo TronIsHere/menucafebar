@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { APP_LOGO, APP_NAME, APP_TITLE } from "@/lib/brand";
+import { SITE_DESCRIPTION } from "@/lib/seo";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: APP_TITLE,
     short_name: APP_NAME,
-    description: "سیستم یکپارچه مدیریت منو، سفارشات و CRM کافه",
+    description: SITE_DESCRIPTION,
     start_url: "/",
     scope: "/",
     display: "standalone",

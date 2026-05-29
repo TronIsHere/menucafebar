@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
+import { LANDING_FAQS } from "@/lib/landing-faqs";
 import { AppLogo } from "@/components/brand/AppLogo";
 import {
   Reveal,
@@ -298,32 +299,33 @@ const trustBadges = [
   { icon: Lock, title: "امنیت اطلاعات", desc: "رمزگذاری کامل داده‌ها", color: "text-purple-600", bg: "bg-purple-50" },
 ];
 
-const faqs = [
+const footerColumns = [
   {
-    q: "آیا واقعاً رایگان است؟",
-    a: "بله. پلن رایگان همیشه رایگان است و برای شروع فقط شماره موبایل لازم است. هر زمان خواستید می‌توانید به پلن حرفه‌ای ارتقا دهید.",
+    title: "محصول",
+    links: [
+      { label: "امکانات", href: "#features" },
+      { label: "قیمت‌گذاری", href: "#pricing" },
+      { label: "نظرات", href: "#testimonials" },
+      { label: "سوالات متداول", href: "#faq" },
+    ],
   },
   {
-    q: "برای راه‌اندازی به سخت‌افزار خاصی نیاز دارم؟",
-    a: "خیر. تنها به یک گوشی یا لپ‌تاپ و اینترنت نیاز دارید. کافی است QR کد را پرینت بگیرید و روی میزها قرار دهید؛ همین.",
+    title: "شروع",
+    links: [
+      { label: "ثبت‌نام رایگان", href: "/login" },
+      { label: "ورود به پنل", href: "/login" },
+      { label: "راهنمای شروع", href: "#faq" },
+    ],
   },
   {
-    q: "مشتری باید اپلیکیشن نصب کند؟",
-    a: "به هیچ وجه. مشتری فقط QR را با دوربین گوشی اسکن می‌کند و منو مستقیم در مرورگر باز می‌شود. بدون نصب، بدون ثبت‌نام.",
+    title: "پشتیبانی",
+    links: [
+      { label: "مرکز راهنما", href: "#faq" },
+      { label: "سوالات متداول", href: "#faq" },
+      { label: "تماس با ما", href: "/login" },
+    ],
   },
-  {
-    q: "اطلاعات کافه و مشتریانم امن است؟",
-    a: "بله. تمام داده‌ها با استانداردهای روز رمزگذاری و روی سرورهای امن نگهداری می‌شوند و دسترسی فقط در اختیار شماست.",
-  },
-  {
-    q: "آیا می‌توانم منو را خودم ویرایش کنم؟",
-    a: "بله. از پنل مدیریت در هر لحظه می‌توانید آیتم‌ها، قیمت‌ها، عکس‌ها و دسته‌بندی‌ها را تغییر دهید؛ تغییرات بلافاصله اعمال می‌شوند.",
-  },
-  {
-    q: "اگر سوال یا مشکلی داشتم چه کنم؟",
-    a: "تیم پشتیبانی فارسی ما به‌صورت ۲۴/۷ از طریق چت، تیکت و تلگرام آماده کمک به شماست.",
-  },
-];
+] as const;
 
 function PhotoSlot({
   src,
@@ -1195,7 +1197,7 @@ export default function LandingPage() {
           </Reveal>
 
           <div className="space-y-3">
-            {faqs.map((f, i) => (
+            {LANDING_FAQS.map((f, i) => (
               <Reveal key={f.q} delay={i * 60}>
                 <FaqItem q={f.q} a={f.a} />
               </Reveal>
@@ -1262,19 +1264,18 @@ export default function LandingPage() {
               </p>
             </div>
 
-            {[
-              { title: "محصول", links: ["امکانات", "قیمت‌گذاری", "مستندات", "وضعیت سیستم"] },
-              { title: "شرکت", links: ["درباره ما", "بلاگ", "فرصت‌های شغلی", "تماس با ما"] },
-              { title: "پشتیبانی", links: ["مرکز راهنما", "سوالات متداول", "تیکت پشتیبانی", "کانال تلگرام"] },
-            ].map((col) => (
+            {footerColumns.map((col) => (
               <div key={col.title}>
                 <h4 className="text-sm font-semibold mb-3">{col.title}</h4>
                 <ul className="space-y-2">
                   {col.links.map((link) => (
-                    <li key={link}>
-                      <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                        {link}
-                      </a>
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {link.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -1285,11 +1286,12 @@ export default function LandingPage() {
           <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
             <p className="text-xs text-muted-foreground">© ۱۴۰۴ {APP_NAME}. تمام حقوق محفوظ است.</p>
             <div className="flex gap-5">
-              {["حریم خصوصی", "شرایط استفاده", "سیاست کوکی"].map((item) => (
-                <a key={item} href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                  {item}
-                </a>
-              ))}
+              <Link
+                href="/login"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                تماس با ما
+              </Link>
             </div>
           </div>
         </div>

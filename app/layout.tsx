@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import { DirectionProvider } from "@/components/providers/DirectionProvider";
 import { PWARegister } from "@/components/providers/PWARegister";
-import { APP_LOGO, APP_NAME, APP_TITLE } from "@/lib/brand";
+import { rootMetadata } from "@/lib/seo";
 import "./globals.css";
 
 const iranSans = localFont({
@@ -33,23 +33,7 @@ const iranSans = localFont({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: APP_TITLE,
-  description: "سیستم یکپارچه مدیریت منو، سفارشات و CRM کافه",
-  applicationName: APP_NAME,
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: APP_NAME,
-  },
-  icons: {
-    icon: [{ url: APP_LOGO, type: "image/png" }],
-    apple: [{ url: APP_LOGO }],
-  },
-  formatDetection: {
-    telephone: false,
-  },
-};
+export const metadata: Metadata = rootMetadata;
 
 export const viewport: Viewport = {
   themeColor: [

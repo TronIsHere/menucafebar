@@ -1,6 +1,10 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+import { appRouteMetadata } from "@/lib/seo";
 import { getSession, getCafeForOwner } from "@/lib/session";
+
+export const metadata: Metadata = appRouteMetadata;
 import { Sidebar, MobileDashboardHeader } from "@/components/dashboard/Sidebar";
 import { DashboardNavOverlay } from "@/components/dashboard/DashboardNavOverlay";
 
