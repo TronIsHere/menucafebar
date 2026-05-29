@@ -15,8 +15,11 @@ import CustomerClubVerify, {
 } from "@/components/checkout/CustomerClubVerify";
 import { calculateDiscount } from "@/lib/customer-club/discount";
 import { toast } from "sonner";
-import { ArrowRight, Minus, Plus, Trash2 } from "@/lib/icons/app-icons";
+import { ArrowRight, Banknote, CreditCard, Minus, Plus, Trash2 } from "@/lib/icons/app-icons";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+type PaymentMethod = "on_delivery" | "online";
 
 interface Cafe {
   name: string;
@@ -37,6 +40,7 @@ export default function CheckoutClient({ cafe }: { cafe: Cafe }) {
   const [customerName, setCustomerName] = useState("");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("on_delivery");
   const [clubState, setClubState] = useState<CustomerClubState | null>(null);
 
   const hasDefinedTables = (cafe.tableNumbers ?? []).length > 0;
@@ -51,15 +55,26 @@ export default function CheckoutClient({ cafe }: { cafe: Cafe }) {
   const cartTotal = pricing.total;
   const tableFromQr = Boolean(cartTableNumber);
 
-  async function submitOrder() {
+  function validateCheckout() {
     if (items.length === 0) {
       toast.error("سبد خالی است");
-      return;
+      return false;
     }
     if (hasDefinedTables && !cartTableNumber) {
       toast.error("میز را انتخاب کنید");
-      return;
+      return false;
     }
+    return true;
+  }
+
+  function handlePayOnline() {
+    if (!validateCheckout()) return;
+    // TODO: initiate payment gateway redirect
+    toast.info("پرداخت آنلاین به‌زودی فعال می‌شود");
+  }
+
+  async function submitOrder() {
+    if (!validateCheckout()) return;
     setLoading(true);
     try {
       const res = await fetch("/api/orders", {
@@ -232,26 +247,82 @@ export default function CheckoutClient({ cafe }: { cafe: Cafe }) {
           </CardContent>
         </Card>
 
-        {/* Payment notice */}
-        <Card className="bg-amber-50 border-amber-200">
-          <CardContent className="p-4">
-            <p className="text-sm text-amber-800">
-              💳 پرداخت هنگام تحویل سفارش انجام می‌شود
-            </p>
+        {/* Payment method */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">روش پرداخت</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <button
+              type="button"
+              onClick={() => setPaymentMethod("online")}
+              className={cn(
+                "w-full flex items-center gap-3 rounded-lg border p-3 text-right transition-colors",
+                paymentMethod === "online"
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:bg-muted/50"
+              )}
+            >
+              <div
+                className={cn(
+                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+                  paymentMethod === "online" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                )}
+              >
+                <CreditCard className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium">پرداخت آنلاین</p>
+                <p className="text-xs text-muted-foreground">پرداخت امن با درگاه بانکی</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMethod("on_delivery")}
+              className={cn(
+                "w-full flex items-center gap-3 rounded-lg border p-3 text-right transition-colors",
+                paymentMethod === "on_delivery"
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:bg-muted/50"
+              )}
+            >
+              <div
+                className={cn(
+                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+                  paymentMethod === "on_delivery" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                )}
+              >
+                <Banknote className="h-5 w-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium">پرداخت هنگام تحویل</p>
+                <p className="text-xs text-muted-foreground">نقدی یا کارتخوان در محل</p>
+              </div>
+            </button>
           </CardContent>
         </Card>
       </div>
 
       {/* Submit button */}
       <div className="fixed bottom-0 inset-x-0 bg-white border-t p-4">
-        <div className="max-w-lg mx-auto">
-          <Button
-            className="w-full h-12 text-base"
-            onClick={submitOrder}
-            disabled={loading}
-          >
-            {loading ? "در حال ثبت..." : `ثبت سفارش (${formatToman(cartTotal)})`}
-          </Button>
+        <div className="max-w-lg mx-auto space-y-2">
+          {paymentMethod === "online" ? (
+            <Button
+              className="w-full h-12 text-base"
+              onClick={handlePayOnline}
+              disabled={loading}
+            >
+              پرداخت آنلاین ({formatToman(cartTotal)})
+            </Button>
+          ) : (
+            <Button
+              className="w-full h-12 text-base"
+              onClick={submitOrder}
+              disabled={loading}
+            >
+              {loading ? "در حال ثبت..." : `ثبت سفارش (${formatToman(cartTotal)})`}
+            </Button>
+          )}
         </div>
       </div>
     </div>

@@ -21,11 +21,6 @@ import {
   UtensilsCrossed,
   Settings,
   Coffee,
-  CupSoda,
-  Croissant,
-  Cookie,
-  Sparkles,
-  IceCream,
   Plus,
   ChevronDown,
   BadgeCheck,
@@ -56,6 +51,10 @@ import {
   RotatingWords,
 } from "@/components/landing/landing-motion";
 import { StickyCtaBar } from "@/components/landing/StickyCtaBar";
+import {
+  AnimatedLetters,
+  HeroPathsBackdrop,
+} from "@/components/ui/background-paths";
 
 const navLinks = [
   { label: "امکانات", href: "#features" },
@@ -239,16 +238,6 @@ const sidebarItems = [
 ];
 
 const chartBars = [40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88];
-
-// Coffee-themed floating icons for the hero backdrop.
-const floatIcons = [
-  { Icon: Coffee, className: "top-[18%] right-[8%]", size: "w-10 h-10", color: "text-amber-500/40", delay: "0s", dur: "15s" },
-  { Icon: Croissant, className: "top-[30%] left-[10%]", size: "w-9 h-9", color: "text-orange-400/40", delay: "-3s", dur: "18s" },
-  { Icon: CupSoda, className: "top-[62%] right-[14%]", size: "w-8 h-8", color: "text-rose-400/40", delay: "-6s", dur: "17s" },
-  { Icon: Cookie, className: "top-[70%] left-[16%]", size: "w-9 h-9", color: "text-amber-600/40", delay: "-9s", dur: "20s" },
-  { Icon: IceCream, className: "top-[12%] left-[26%]", size: "w-7 h-7", color: "text-pink-400/30", delay: "-2s", dur: "19s" },
-  { Icon: Sparkles, className: "top-[48%] right-[28%]", size: "w-6 h-6", color: "text-amber-400/40", delay: "-5s", dur: "14s" },
-];
 
 // "Trusted by" marquee items (cafe-themed social proof).
 const trustedCafes = [
@@ -540,21 +529,10 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative pt-28 pb-16 px-4 sm:px-6">
-        {/* Floating coffee icons */}
-        <div className="absolute inset-0 pointer-events-none select-none hidden sm:block" aria-hidden>
-          {floatIcons.map(({ Icon, className, size, color, delay, dur }, i) => (
-            <div
-              key={i}
-              className={cn("lp-drift absolute", className)}
-              style={{ animationDelay: delay, animationDuration: dur }}
-            >
-              <Icon className={cn(size, color)} strokeWidth={1.5} />
-            </div>
-          ))}
-        </div>
+      <section className="relative overflow-hidden pt-28 pb-16 px-4 sm:px-6">
+        <HeroPathsBackdrop />
 
-        <div className="max-w-6xl mx-auto relative">
+        <div className="relative z-10 max-w-6xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <div className="animate-[lp-fade-up_0.7s_cubic-bezier(0.16,1,0.3,1)_both]">
               <SectionBadge>
@@ -565,15 +543,15 @@ export default function LandingPage() {
               </SectionBadge>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.15] mb-5 animate-[lp-fade-up_0.7s_cubic-bezier(0.16,1,0.3,1)_0.08s_both]">
-              کافه‌ات را
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.15] mb-5">
+              <AnimatedLetters text="کافه‌ات را" />
               <span className="block py-1">
                 <RotatingWords
                   words={heroWords}
                   className="lp-gradient-text font-extrabold"
                 />
               </span>
-              مدیریت کن
+              <AnimatedLetters text="مدیریت کن" wordDelay={0.35} />
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed animate-[lp-fade-up_0.7s_cubic-bezier(0.16,1,0.3,1)_0.16s_both]">
