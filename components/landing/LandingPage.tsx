@@ -36,12 +36,7 @@ import {
 } from "@/lib/icons/app-icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
 import { LANDING_FAQS } from "@/lib/landing-faqs";
@@ -165,7 +160,6 @@ const plans = [
     price: "۰",
     period: "همیشه رایگان",
     features: [
-      "۱ کافه",
       "منوی دیجیتال QR",
       "ثبت سفارش آنلاین",
       "تا ۵۰ سفارش ماهانه",
@@ -179,12 +173,12 @@ const plans = [
     price: "۱۴۹,۰۰۰",
     period: "تومان / ماه",
     features: [
-      "۳ کافه",
       "همه امکانات رایگان",
       "تحلیل فروش پیشرفته",
       "مدیریت موجودی",
       "CRM مشتریان",
       "پشتیبانی اولویت‌دار",
+      "باشگاه مشتریان",
     ],
     cta: "۱۴ روز رایگان امتحان کن",
     highlight: true,
@@ -217,16 +211,61 @@ type Stat = {
 };
 
 const stats: Stat[] = [
-  { to: 500, suffix: "+", label: "کافه فعال", color: "text-orange-500", bg: "bg-orange-50", icon: Coffee },
-  { to: 2, suffix: "M+", label: "سفارش ثبت‌شده", color: "text-blue-500", bg: "bg-blue-50", icon: ShoppingBag },
-  { to: 98, suffix: "٪", label: "رضایت کاربران", color: "text-green-500", bg: "bg-green-50", icon: Star },
-  { static: "۲۴/۷", label: "پشتیبانی", color: "text-purple-500", bg: "bg-purple-50", icon: Clock },
+  {
+    to: 500,
+    suffix: "+",
+    label: "کافه فعال",
+    color: "text-orange-500",
+    bg: "bg-orange-50",
+    icon: Coffee,
+  },
+  {
+    to: 2,
+    suffix: "M+",
+    label: "سفارش ثبت‌شده",
+    color: "text-blue-500",
+    bg: "bg-blue-50",
+    icon: ShoppingBag,
+  },
+  {
+    to: 98,
+    suffix: "٪",
+    label: "رضایت کاربران",
+    color: "text-green-500",
+    bg: "bg-green-50",
+    icon: Star,
+  },
+  {
+    static: "۲۴/۷",
+    label: "پشتیبانی",
+    color: "text-purple-500",
+    bg: "bg-purple-50",
+    icon: Clock,
+  },
 ];
 
 const mockOrders = [
-  { table: "میز ۵", items: "اسپرسو دوبل، کیک شکلاتی", status: "در حال آماده‌سازی", variant: "secondary" as const, num: "۵" },
-  { table: "میز ۲", items: "کاپوچینو، ماکارون", status: "تکمیل شده", variant: "outline" as const, num: "۲" },
-  { table: "میز ۸", items: "چای ماسالا، چیزکیک", status: "جدید", variant: "default" as const, num: "۸" },
+  {
+    table: "میز ۵",
+    items: "اسپرسو دوبل، کیک شکلاتی",
+    status: "در حال آماده‌سازی",
+    variant: "secondary" as const,
+    num: "۵",
+  },
+  {
+    table: "میز ۲",
+    items: "کاپوچینو، ماکارون",
+    status: "تکمیل شده",
+    variant: "outline" as const,
+    num: "۲",
+  },
+  {
+    table: "میز ۸",
+    items: "چای ماسالا، چیزکیک",
+    status: "جدید",
+    variant: "default" as const,
+    num: "۸",
+  },
 ];
 
 const sidebarItems = [
@@ -278,9 +317,27 @@ const painPoints = [
 
 // Customer-facing digital menu showcase (shown inside the phone mockup).
 const menuShowcase = [
-  { name: "کاپوچینو", desc: "اسپرسو با شیر بخارپز", price: "۸۵,۰۰۰", img: "/images/menu-coffee.jpg", tag: "پرفروش" },
-  { name: "کیک شکلاتی", desc: "گاناش بلژیکی + تمشک", price: "۱۲۰,۰۰۰", img: "/images/menu-cake.jpg", tag: "" },
-  { name: "آیس لاته کارامل", desc: "سرد، خنک و خوش‌طعم", price: "۹۵,۰۰۰", img: "/images/menu-iced.jpg", tag: "جدید" },
+  {
+    name: "کاپوچینو",
+    desc: "اسپرسو با شیر بخارپز",
+    price: "۸۵,۰۰۰",
+    img: "/images/menu-coffee.jpg",
+    tag: "پرفروش",
+  },
+  {
+    name: "کیک شکلاتی",
+    desc: "گاناش بلژیکی + تمشک",
+    price: "۱۲۰,۰۰۰",
+    img: "/images/menu-cake.jpg",
+    tag: "",
+  },
+  {
+    name: "آیس لاته کارامل",
+    desc: "سرد، خنک و خوش‌طعم",
+    price: "۹۵,۰۰۰",
+    img: "/images/menu-iced.jpg",
+    tag: "جدید",
+  },
 ];
 
 const menuCategories = ["همه", "قهوه گرم", "قهوه سرد", "دسر", "صبحانه"];
@@ -293,10 +350,34 @@ const customerSteps = [
 ];
 
 const trustBadges = [
-  { icon: BadgeCheck, title: "۱۴ روز ضمانت", desc: "بازگشت کامل وجه", color: "text-green-600", bg: "bg-green-50" },
-  { icon: Smartphone, title: "ثبت‌نام با موبایل", desc: "فقط شماره موبایل کافی است", color: "text-blue-600", bg: "bg-blue-50" },
-  { icon: Ban, title: "لغو در هر زمان", desc: "بدون تعهد و قرارداد", color: "text-amber-600", bg: "bg-amber-50" },
-  { icon: Lock, title: "امنیت اطلاعات", desc: "رمزگذاری کامل داده‌ها", color: "text-purple-600", bg: "bg-purple-50" },
+  {
+    icon: BadgeCheck,
+    title: "۱۴ روز ضمانت",
+    desc: "بازگشت کامل وجه",
+    color: "text-green-600",
+    bg: "bg-green-50",
+  },
+  {
+    icon: Smartphone,
+    title: "ثبت‌نام با موبایل",
+    desc: "فقط شماره موبایل کافی است",
+    color: "text-blue-600",
+    bg: "bg-blue-50",
+  },
+  {
+    icon: Ban,
+    title: "لغو در هر زمان",
+    desc: "بدون تعهد و قرارداد",
+    color: "text-amber-600",
+    bg: "bg-amber-50",
+  },
+  {
+    icon: Lock,
+    title: "امنیت اطلاعات",
+    desc: "رمزگذاری کامل داده‌ها",
+    color: "text-purple-600",
+    bg: "bg-purple-50",
+  },
 ];
 
 const footerColumns = [
@@ -345,7 +426,7 @@ function PhotoSlot({
       className={cn(
         "relative overflow-hidden bg-linear-to-br from-amber-100 via-orange-50 to-rose-100",
         rounded,
-        className
+        className,
       )}
     >
       {!failed ? (
@@ -382,18 +463,20 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         <ChevronDown
           className={cn(
             "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300",
-            open && "rotate-180"
+            open && "rotate-180",
           )}
         />
       </button>
       <div
         className={cn(
           "grid transition-all duration-300 ease-out",
-          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
         )}
       >
         <div className="overflow-hidden">
-          <p className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          <p className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">
+            {a}
+          </p>
         </div>
       </div>
     </div>
@@ -442,18 +525,32 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-muted/20 text-foreground overflow-x-hidden pb-20">
       {/* Animated aurora backdrop (warm coffee tones) */}
-      <div className="fixed inset-0 -z-10 pointer-events-none select-none overflow-hidden" aria-hidden>
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none select-none overflow-hidden"
+        aria-hidden
+      >
         <div
           className="lp-aurora-blob absolute -top-40 right-[-10%] w-2xl h-168 rounded-full blur-3xl opacity-50"
-          style={{ background: "radial-gradient(circle, hsl(28 95% 60% / 0.35), transparent 65%)" }}
+          style={{
+            background:
+              "radial-gradient(circle, hsl(28 95% 60% / 0.35), transparent 65%)",
+          }}
         />
         <div
           className="lp-aurora-blob absolute top-[20%] left-[-15%] w-152 h-152 rounded-full blur-3xl opacity-40"
-          style={{ background: "radial-gradient(circle, hsl(340 80% 65% / 0.28), transparent 65%)", animationDelay: "-6s" }}
+          style={{
+            background:
+              "radial-gradient(circle, hsl(340 80% 65% / 0.28), transparent 65%)",
+            animationDelay: "-6s",
+          }}
         />
         <div
           className="lp-aurora-blob absolute bottom-[-10%] right-[20%] w-136 h-136 rounded-full blur-3xl opacity-30"
-          style={{ background: "radial-gradient(circle, hsl(45 95% 60% / 0.3), transparent 65%)", animationDelay: "-11s" }}
+          style={{
+            background:
+              "radial-gradient(circle, hsl(45 95% 60% / 0.3), transparent 65%)",
+            animationDelay: "-11s",
+          }}
         />
         {/* fine grid texture with radial fade */}
         <div
@@ -462,8 +559,10 @@ export default function LandingPage() {
             backgroundImage:
               "linear-gradient(hsl(var(--border)/0.7) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)/0.7) 1px, transparent 1px)",
             backgroundSize: "44px 44px",
-            maskImage: "radial-gradient(ellipse 70% 55% at 50% 0%, black 10%, transparent 75%)",
-            WebkitMaskImage: "radial-gradient(ellipse 70% 55% at 50% 0%, black 10%, transparent 75%)",
+            maskImage:
+              "radial-gradient(ellipse 70% 55% at 50% 0%, black 10%, transparent 75%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 70% 55% at 50% 0%, black 10%, transparent 75%)",
           }}
         />
       </div>
@@ -472,13 +571,14 @@ export default function LandingPage() {
       <nav
         className={cn(
           "fixed z-50 transition-all duration-300 px-4 sm:px-6",
-          scrolled ? "top-3 inset-x-0" : "top-0 inset-x-0"
+          scrolled ? "top-3 inset-x-0" : "top-0 inset-x-0",
         )}
       >
         <div
           className={cn(
             "max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between transition-all duration-300",
-            scrolled && "rounded-2xl bg-background/90 backdrop-blur-lg border border-border shadow-lg"
+            scrolled &&
+              "rounded-2xl bg-background/90 backdrop-blur-lg border border-border shadow-lg",
           )}
         >
           <Logo size="sm" />
@@ -496,7 +596,12 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="hidden md:inline-flex" asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hidden md:inline-flex"
+              asChild
+            >
               <Link href="/login">ورود</Link>
             </Button>
             <Button size="sm" className="lp-shine-wrap" asChild>
@@ -509,7 +614,11 @@ export default function LandingPage() {
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="toggle menu"
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -572,7 +681,12 @@ export default function LandingPage() {
                   <ArrowLeft className="w-4 h-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="transition-transform hover:scale-[1.03]" asChild>
+              <Button
+                size="lg"
+                variant="outline"
+                className="transition-transform hover:scale-[1.03]"
+                asChild
+              >
                 <a href="#features">مشاهده امکانات</a>
               </Button>
             </div>
@@ -585,7 +699,10 @@ export default function LandingPage() {
           <Reveal className="relative mx-auto max-w-5xl" delay={120}>
             <div
               className="absolute -inset-6 -z-10 rounded-4xl blur-2xl opacity-60"
-              style={{ background: "linear-gradient(120deg, hsl(28 95% 60% / 0.3), hsl(340 80% 65% / 0.25), hsl(45 95% 60% / 0.3))" }}
+              style={{
+                background:
+                  "linear-gradient(120deg, hsl(28 95% 60% / 0.3), hsl(340 80% 65% / 0.25), hsl(45 95% 60% / 0.3))",
+              }}
               aria-hidden
             />
             <Card
@@ -609,7 +726,9 @@ export default function LandingPage() {
                       <AppLogo size="xs" />
                       <div className="min-w-0">
                         <p className="text-xs font-bold truncate">کافه آوا</p>
-                        <p className="text-[10px] text-muted-foreground">پنل مدیریت</p>
+                        <p className="text-[10px] text-muted-foreground">
+                          پنل مدیریت
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -621,7 +740,7 @@ export default function LandingPage() {
                           "flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium transition-colors",
                           item.active
                             ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:bg-muted"
+                            : "text-muted-foreground hover:bg-muted",
                         )}
                       >
                         <item.icon className="w-3.5 h-3.5 shrink-0" />
@@ -636,9 +755,14 @@ export default function LandingPage() {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h3 className="text-sm font-bold">خوش آمدید 👋</h3>
-                      <p className="text-xs text-muted-foreground">خلاصه وضعیت کافه</p>
+                      <p className="text-xs text-muted-foreground">
+                        خلاصه وضعیت کافه
+                      </p>
                     </div>
-                    <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 text-[10px]">
+                    <Badge
+                      variant="outline"
+                      className="text-green-600 border-green-200 bg-green-50 text-[10px]"
+                    >
                       <span className="relative w-1.5 h-1.5 rounded-full bg-green-500 me-1.5 text-green-500 lp-pulse-ring" />
                       آنلاین
                     </Badge>
@@ -646,19 +770,54 @@ export default function LandingPage() {
 
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
                     {[
-                      { label: "در حال انجام", value: "۸", color: "text-orange-500", bg: "bg-orange-50", icon: Clock },
-                      { label: "سفارشات امروز", value: "۴۷", color: "text-blue-500", bg: "bg-blue-50", icon: ShoppingBag },
-                      { label: "درآمد امروز", value: "۲.۸M", color: "text-green-500", bg: "bg-green-50", icon: TrendingUp },
-                      { label: "کل سفارشات", value: "۱,۲۴۰", color: "text-purple-500", bg: "bg-purple-50", icon: Check },
+                      {
+                        label: "در حال انجام",
+                        value: "۸",
+                        color: "text-orange-500",
+                        bg: "bg-orange-50",
+                        icon: Clock,
+                      },
+                      {
+                        label: "سفارشات امروز",
+                        value: "۴۷",
+                        color: "text-blue-500",
+                        bg: "bg-blue-50",
+                        icon: ShoppingBag,
+                      },
+                      {
+                        label: "درآمد امروز",
+                        value: "۲.۸M",
+                        color: "text-green-500",
+                        bg: "bg-green-50",
+                        icon: TrendingUp,
+                      },
+                      {
+                        label: "کل سفارشات",
+                        value: "۱,۲۴۰",
+                        color: "text-purple-500",
+                        bg: "bg-purple-50",
+                        icon: Check,
+                      },
                     ].map((stat) => (
-                      <div key={stat.label} className="rounded-lg border bg-card p-3 shadow-sm transition-transform hover:-translate-y-0.5">
+                      <div
+                        key={stat.label}
+                        className="rounded-lg border bg-card p-3 shadow-sm transition-transform hover:-translate-y-0.5"
+                      >
                         <div className="flex items-center justify-between gap-2">
                           <div className="min-w-0">
-                            <p className="text-[10px] text-muted-foreground truncate">{stat.label}</p>
-                            <p className="text-base font-bold mt-0.5">{stat.value}</p>
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              {stat.label}
+                            </p>
+                            <p className="text-base font-bold mt-0.5">
+                              {stat.value}
+                            </p>
                           </div>
-                          <div className={cn("p-2 rounded-lg shrink-0", stat.bg)}>
-                            <stat.icon className={cn("w-3.5 h-3.5", stat.color)} />
+                          <div
+                            className={cn("p-2 rounded-lg shrink-0", stat.bg)}
+                          >
+                            <stat.icon
+                              className={cn("w-3.5 h-3.5", stat.color)}
+                            />
                           </div>
                         </div>
                       </div>
@@ -674,7 +833,8 @@ export default function LandingPage() {
                           className="lp-bar flex-1 rounded-sm bg-primary/15"
                           style={{
                             height: `${h}%`,
-                            backgroundColor: i === 11 ? "hsl(var(--primary))" : undefined,
+                            backgroundColor:
+                              i === 11 ? "hsl(var(--primary))" : undefined,
                             opacity: i === 11 ? 1 : 0.3 + (h / 100) * 0.5,
                             animationDelay: `${0.3 + i * 0.06}s`,
                           }}
@@ -698,11 +858,18 @@ export default function LandingPage() {
                               {order.num}
                             </div>
                             <div>
-                              <p className="text-xs font-medium">{order.table}</p>
-                              <p className="text-[10px] text-muted-foreground">{order.items}</p>
+                              <p className="text-xs font-medium">
+                                {order.table}
+                              </p>
+                              <p className="text-[10px] text-muted-foreground">
+                                {order.items}
+                              </p>
                             </div>
                           </div>
-                          <Badge variant={order.variant} className="text-[10px] px-1.5 py-0">
+                          <Badge
+                            variant={order.variant}
+                            className="text-[10px] px-1.5 py-0"
+                          >
                             {order.status}
                           </Badge>
                         </div>
@@ -727,7 +894,9 @@ export default function LandingPage() {
                     className="flex items-center gap-2 text-muted-foreground/70 shrink-0"
                   >
                     <Coffee className="w-4 h-4" strokeWidth={1.75} />
-                    <span className="text-sm font-semibold whitespace-nowrap">{name}</span>
+                    <span className="text-sm font-semibold whitespace-nowrap">
+                      {name}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -741,7 +910,12 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, i) => (
             <Reveal key={stat.label} className="text-center" delay={i * 90}>
-              <div className={cn("inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3 transition-transform hover:scale-110 hover:-rotate-6", stat.bg)}>
+              <div
+                className={cn(
+                  "inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3 transition-transform hover:scale-110 hover:-rotate-6",
+                  stat.bg,
+                )}
+              >
                 <stat.icon className={cn("w-5 h-5", stat.color)} />
               </div>
               <div className="text-2xl md:text-3xl font-bold mb-1">
@@ -766,7 +940,8 @@ export default function LandingPage() {
               مدیریت سنتی کافه، پر از دردسر است
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              منوی کاغذی، سفارش‌های گم‌شده و نبود اطلاعات، هر روز به کافه‌ات ضرر می‌زنند.
+              منوی کاغذی، سفارش‌های گم‌شده و نبود اطلاعات، هر روز به کافه‌ات ضرر
+              می‌زنند.
             </p>
           </Reveal>
 
@@ -781,7 +956,9 @@ export default function LandingPage() {
                     <p.icon className="h-5 w-5 text-rose-500" />
                   </div>
                   <h3 className="mb-1.5 font-semibold">{p.title}</h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {p.desc}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -790,7 +967,9 @@ export default function LandingPage() {
           <Reveal className="mt-10" delay={120}>
             <div className="grid md:grid-cols-2 gap-4 mb-10">
               <div className="rounded-2xl border border-dashed border-rose-200 bg-rose-50/50 p-6">
-                <p className="text-xs font-bold uppercase tracking-wide text-rose-600 mb-4">قبل</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-rose-600 mb-4">
+                  قبل
+                </p>
                 <ul className="space-y-3 text-sm text-muted-foreground">
                   {[
                     "سفارش‌های دستی و اشتباه",
@@ -851,18 +1030,22 @@ export default function LandingPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((f, i) => (
               <Reveal key={f.title} delay={(i % 3) * 100}>
-                <Card className={cn("group lp-lift h-full hover:shadow-xl", f.glow)}>
+                <Card
+                  className={cn("group lp-lift h-full hover:shadow-xl", f.glow)}
+                >
                   <CardContent className="p-6">
                     <div
                       className={cn(
                         "w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6",
-                        f.bg
+                        f.bg,
                       )}
                     >
                       <f.icon className={cn("w-5 h-5", f.color)} />
                     </div>
                     <h3 className="font-semibold mb-2">{f.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {f.desc}
+                    </p>
                   </CardContent>
                 </Card>
               </Reveal>
@@ -881,7 +1064,9 @@ export default function LandingPage() {
             </SectionBadge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-snug">
               مشتری فقط{" "}
-              <span className="lp-gradient-text font-extrabold">QR را اسکن</span>{" "}
+              <span className="lp-gradient-text font-extrabold">
+                QR را اسکن
+              </span>{" "}
               می‌کند
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8 max-w-md">
@@ -900,7 +1085,11 @@ export default function LandingPage() {
               ))}
             </ul>
 
-            <Button size="lg" className="lp-shine-wrap gap-2 cursor-pointer transition-colors duration-200" asChild>
+            <Button
+              size="lg"
+              className="lp-shine-wrap gap-2 cursor-pointer transition-colors duration-200"
+              asChild
+            >
               <Link href="/login">
                 منوی دیجیتال خودت را بساز
                 <ArrowLeft className="w-4 h-4" />
@@ -914,7 +1103,10 @@ export default function LandingPage() {
               {/* glow */}
               <div
                 className="absolute -inset-8 -z-10 rounded-full blur-3xl opacity-50"
-                style={{ background: "radial-gradient(circle, hsl(28 95% 60% / 0.35), transparent 70%)" }}
+                style={{
+                  background:
+                    "radial-gradient(circle, hsl(28 95% 60% / 0.35), transparent 70%)",
+                }}
                 aria-hidden
               />
 
@@ -925,7 +1117,12 @@ export default function LandingPage() {
                 <div className="flex h-[580px] flex-col overflow-hidden rounded-[1.6rem] bg-background">
                   {/* cafe header */}
                   <div className="relative h-28 shrink-0">
-                    <PhotoSlot src="/images/cafe-ambiance.jpg" alt="کافه آوا" rounded="rounded-none" className="h-full w-full" />
+                    <PhotoSlot
+                      src="/images/cafe-ambiance.jpg"
+                      alt="کافه آوا"
+                      rounded="rounded-none"
+                      className="h-full w-full"
+                    />
                     <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
                     <div className="absolute bottom-2.5 inset-x-3 flex items-end justify-between text-white">
                       <div>
@@ -949,7 +1146,7 @@ export default function LandingPage() {
                           "whitespace-nowrap rounded-full px-2.5 py-1 text-[10px] font-medium",
                           i === 0
                             ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground"
+                            : "bg-muted text-muted-foreground",
                         )}
                       >
                         {c}
@@ -960,22 +1157,36 @@ export default function LandingPage() {
                   {/* items */}
                   <div className="flex-1 space-y-2.5 overflow-hidden p-3">
                     {menuShowcase.map((item) => (
-                      <div key={item.name} className="flex gap-2.5 rounded-xl border border-border bg-card p-2">
-                        <PhotoSlot src={item.img} alt={item.name} rounded="rounded-lg" className="h-16 w-16 shrink-0" />
+                      <div
+                        key={item.name}
+                        className="flex gap-2.5 rounded-xl border border-border bg-card p-2"
+                      >
+                        <PhotoSlot
+                          src={item.img}
+                          alt={item.name}
+                          rounded="rounded-lg"
+                          className="h-16 w-16 shrink-0"
+                        />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">
-                            <p className="truncate text-xs font-bold">{item.name}</p>
+                            <p className="truncate text-xs font-bold">
+                              {item.name}
+                            </p>
                             {item.tag && (
                               <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[8px] font-semibold text-amber-700">
                                 {item.tag}
                               </span>
                             )}
                           </div>
-                          <p className="truncate text-[10px] text-muted-foreground">{item.desc}</p>
+                          <p className="truncate text-[10px] text-muted-foreground">
+                            {item.desc}
+                          </p>
                           <div className="mt-1.5 flex items-center justify-between">
                             <span className="text-[11px] font-bold">
                               {item.price}{" "}
-                              <span className="text-[8px] font-normal text-muted-foreground">تومان</span>
+                              <span className="text-[8px] font-normal text-muted-foreground">
+                                تومان
+                              </span>
                             </span>
                             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
                               <Plus className="h-3.5 w-3.5" />
@@ -1007,7 +1218,9 @@ export default function LandingPage() {
                 <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-neutral-900 text-white">
                   <QrCode className="h-9 w-9" />
                 </div>
-                <p className="mt-1.5 text-center text-[9px] font-semibold text-muted-foreground">اسکن کن</p>
+                <p className="mt-1.5 text-center text-[9px] font-semibold text-muted-foreground">
+                  اسکن کن
+                </p>
               </div>
             </div>
           </Reveal>
@@ -1015,7 +1228,10 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials — social proof before pricing */}
-      <section id="testimonials" className="py-20 px-4 sm:px-6 bg-background/70 backdrop-blur-sm border-y border-border">
+      <section
+        id="testimonials"
+        className="py-20 px-4 sm:px-6 bg-background/70 backdrop-blur-sm border-y border-border"
+      >
         <div className="max-w-6xl mx-auto">
           <Reveal className="text-center mb-12">
             <SectionBadge>نظر کاربران</SectionBadge>
@@ -1023,7 +1239,8 @@ export default function LandingPage() {
               نتیجه واقعی برای کافه‌های واقعی
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              میانگین ۲۵٪ رشد درآمد و صفر اشتباه سفارش — طبق بازخورد صاحبان کافه.
+              میانگین ۲۵٪ رشد درآمد و صفر اشتباه سفارش — طبق بازخورد صاحبان
+              کافه.
             </p>
           </Reveal>
 
@@ -1034,19 +1251,29 @@ export default function LandingPage() {
                   <CardContent className="p-6 flex flex-col flex-1">
                     <div className="flex gap-0.5 mb-4">
                       {Array.from({ length: 5 }).map((_, j) => (
-                        <Star key={j} className="w-4 h-4 text-amber-500 fill-amber-500" />
+                        <Star
+                          key={j}
+                          className="w-4 h-4 text-amber-500 fill-amber-500"
+                        />
                       ))}
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">
                       &ldquo;{t.text}&rdquo;
                     </p>
                     <div className="flex items-center gap-3 pt-4 border-t border-border">
-                      <div className={cn("w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold", t.avatarBg)}>
+                      <div
+                        className={cn(
+                          "w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold",
+                          t.avatarBg,
+                        )}
+                      >
                         {t.avatar}
                       </div>
                       <div>
                         <p className="text-sm font-semibold">{t.name}</p>
-                        <p className="text-xs text-muted-foreground">{t.cafe}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {t.cafe}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -1056,7 +1283,11 @@ export default function LandingPage() {
           </div>
 
           <Reveal className="mt-10 text-center" delay={100}>
-            <Button size="lg" className="lp-shine-wrap gap-2 cursor-pointer" asChild>
+            <Button
+              size="lg"
+              className="lp-shine-wrap gap-2 cursor-pointer"
+              asChild
+            >
               <Link href="/login">
                 مثل آن‌ها شروع کن — رایگان
                 <ArrowLeft className="w-4 h-4" />
@@ -1071,8 +1302,12 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto text-center">
           <Reveal>
             <SectionBadge>شروع کار</SectionBadge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">در ۳ قدم ساده راه‌اندازی کن</h2>
-            <p className="text-muted-foreground mb-12">نیازی به دانش فنی یا پشتیبان IT نیست.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              در ۳ قدم ساده راه‌اندازی کن
+            </h2>
+            <p className="text-muted-foreground mb-12">
+              نیازی به دانش فنی یا پشتیبان IT نیست.
+            </p>
           </Reveal>
 
           <div className="grid md:grid-cols-3 gap-6 mb-10">
@@ -1084,7 +1319,9 @@ export default function LandingPage() {
                       {step.num}
                     </div>
                     <h3 className="font-semibold mb-2">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {step.desc}
+                    </p>
                   </CardContent>
                 </Card>
               </Reveal>
@@ -1092,7 +1329,11 @@ export default function LandingPage() {
           </div>
 
           <Reveal delay={100}>
-            <Button size="lg" className="lp-shine-wrap gap-2 cursor-pointer" asChild>
+            <Button
+              size="lg"
+              className="lp-shine-wrap gap-2 cursor-pointer"
+              asChild
+            >
               <Link href="/login">
                 همین الان شروع کن
                 <ArrowLeft className="w-4 h-4" />
@@ -1107,8 +1348,12 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <Reveal className="text-center mb-12">
             <SectionBadge>قیمت‌گذاری</SectionBadge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">شفاف، بدون هزینه پنهان</h2>
-            <p className="text-muted-foreground">همه پلن‌ها با ۱۴ روز آزمایش رایگان شروع می‌شوند.</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              شفاف، بدون هزینه پنهان
+            </h2>
+            <p className="text-muted-foreground">
+              همه پلن‌ها با ۱۴ روز آزمایش رایگان شروع می‌شوند.
+            </p>
           </Reveal>
 
           {/* Risk reversal before pricing cards */}
@@ -1119,11 +1364,18 @@ export default function LandingPage() {
                   key={b.title}
                   className="flex items-center gap-3 rounded-xl border bg-card p-4"
                 >
-                  <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", b.bg)}>
+                  <div
+                    className={cn(
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+                      b.bg,
+                    )}
+                  >
                     <b.icon className={cn("h-5 w-5", b.color)} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold leading-tight">{b.title}</p>
+                    <p className="text-sm font-semibold leading-tight">
+                      {b.title}
+                    </p>
                     <p className="text-xs text-muted-foreground">{b.desc}</p>
                   </div>
                 </div>
@@ -1139,14 +1391,17 @@ export default function LandingPage() {
                     "lp-lift relative h-full",
                     plan.highlight
                       ? "border-primary shadow-xl md:scale-[1.04] hover:shadow-2xl"
-                      : "hover:shadow-lg"
+                      : "hover:shadow-lg",
                   )}
                 >
                   {plan.highlight && (
                     <>
                       <div
                         className="absolute -inset-px -z-10 rounded-xl opacity-60 blur-md"
-                        style={{ background: "linear-gradient(120deg, hsl(28 95% 60% / 0.4), hsl(340 80% 65% / 0.35))" }}
+                        style={{
+                          background:
+                            "linear-gradient(120deg, hsl(28 95% 60% / 0.4), hsl(340 80% 65% / 0.35))",
+                        }}
                         aria-hidden
                       />
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -1158,7 +1413,9 @@ export default function LandingPage() {
                     <CardTitle className="text-lg">{plan.name}</CardTitle>
                     <div className="flex items-end gap-1.5 pt-2">
                       <span className="text-3xl font-bold">{plan.price}</span>
-                      <span className="text-sm text-muted-foreground mb-1">{plan.period}</span>
+                      <span className="text-sm text-muted-foreground mb-1">
+                        {plan.period}
+                      </span>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -1171,7 +1428,10 @@ export default function LandingPage() {
                       ))}
                     </ul>
                     <Button
-                      className={cn("w-full cursor-pointer transition-colors duration-200", plan.highlight && "lp-shine-wrap")}
+                      className={cn(
+                        "w-full cursor-pointer transition-colors duration-200",
+                        plan.highlight && "lp-shine-wrap",
+                      )}
                       variant={plan.highlight ? "default" : "outline"}
                       asChild
                     >
@@ -1190,7 +1450,9 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto">
           <Reveal className="text-center mb-10">
             <SectionBadge>سوالات متداول</SectionBadge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">هر چه باید بدانی</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              هر چه باید بدانی
+            </h2>
             <p className="text-muted-foreground">
               پاسخ سوال‌هایی که صاحبان کافه بیشتر می‌پرسند.
             </p>
@@ -1207,7 +1469,10 @@ export default function LandingPage() {
           <Reveal className="mt-8 text-center" delay={120}>
             <p className="text-sm text-muted-foreground">
               سوال دیگری داری؟{" "}
-              <Link href="/login" className="font-semibold text-primary hover:underline">
+              <Link
+                href="/login"
+                className="font-semibold text-primary hover:underline"
+              >
                 با ما در تماس باش
               </Link>
             </p>
@@ -1233,11 +1498,19 @@ export default function LandingPage() {
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-foreground/10 mb-5">
                     <Coffee className="w-7 h-7 lp-float" />
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4">کافه‌ات را متحول کن</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                    کافه‌ات را متحول کن
+                  </h2>
                   <p className="text-primary-foreground/70 mb-8 max-w-md mx-auto leading-relaxed">
-                    بیش از ۵۰۰ کافه در ایران به {APP_NAME} اعتماد کردند. نوبت توست.
+                    بیش از ۵۰۰ کافه در ایران به {APP_NAME} اعتماد کردند. نوبت
+                    توست.
                   </p>
-                  <Button size="lg" variant="secondary" className="lp-shine-wrap gap-2 transition-transform hover:scale-[1.03]" asChild>
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="lp-shine-wrap gap-2 transition-transform hover:scale-[1.03]"
+                    asChild
+                  >
                     <Link href="/login">
                       شروع کن (کاملاً رایگان)
                       <ArrowLeft className="w-4 h-4" />
@@ -1284,7 +1557,29 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-border pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p className="text-xs text-muted-foreground">© ۱۴۰۴ {APP_NAME}. تمام حقوق محفوظ است.</p>
+            <p className="text-xs text-muted-foreground">
+              © ۱۴۰۴ {APP_NAME}. تمام حقوق محفوظ است.
+            </p>
+            <div>
+              <div className="flex justify-center  w-20 h-20">
+                <div className="">
+                  <a
+                    referrerPolicy="origin"
+                    target="_blank"
+                    href="https://trustseal.enamad.ir/?id=6367518&Code=O2TUBV3PSmFIZFgFkNP017fmI2sE20kL"
+                    className="transition-opacity hover:opacity-80"
+                  >
+                    <img
+                      referrerPolicy="origin"
+                      src="https://trustseal.enamad.ir/logo.aspx?id=6367518&Code=O2TUBV3PSmFIZFgFkNP017fmI2sE20kL"
+                      alt="eNamad Trust Seal"
+                      className="h-32 w-auto cursor-pointer"
+                      loading="lazy"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
             <div className="flex gap-5">
               <Link
                 href="/login"
